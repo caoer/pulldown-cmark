@@ -441,16 +441,15 @@ fn lazy_line_after_quote_still_demotes() {
 }
 
 #[test]
-fn kitchen_sink_nested_task_open_note() {
-    // OPEN NOTE — NOT tuned to the gt-v2 fixture: the frozen v2 kitchen-sink
-    // ground truth expects ^nested-task (task-line tail, lazily-continued
-    // item inside a nested callout) to fire, but the erratum audit flags
-    // that node as a plausible v03-pattern miscode (first-line anchor of a
-    // lazily-continued item; unprobed construct, GT-v3 probe requested).
-    // Under the probe-ruled interior law (^v03) this implementation demotes
-    // it; the continuation-tail anchor ^in-inner fires. This test pins the
-    // implementation's answer so any change is a conscious one — it is NOT
-    // dialect ground truth either way.
+fn kitchen_sink_nested_task_no_fire() {
+    // probe zzprobe-v3d: ^nested-task (task-line tail of a lazily-continued
+    // item inside a nested callout) is a TRUE NO-FIRE — the lazy tail line
+    // joins the item's paragraph, making the task-line anchor interior
+    // (^v03 law); the overwrite explanation was excluded by a discriminator
+    // probe. The continuation-tail anchor ^in-inner FIRES (paragraph tail
+    // inside the nested callout). The frozen gt-v2 kitchen-sink ground
+    // truth expects ^nested-task to fire — that node is a confirmed
+    // miscode (GT-v3 item), not dialect truth.
     let src = "> > [!inner]+ nested open\n> > - [ ] nested task ^nested-task\n> > inner tail line ^in-inner\n";
     let opts = TASK_OPTS | Options::ENABLE_OBSIDIAN_CALLOUTS;
     let found = anchors_opts(src, opts);
