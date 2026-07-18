@@ -35,6 +35,8 @@ pub(crate) fn run_first_pass(text: &str, options: Options) -> (Tree<Item>, Alloc
         lookup_table,
         brace_context_next: 0,
         brace_context_stack: Vec::new(),
+        in_atx_heading: false,
+        pending_line_anchor: None,
     };
     first_pass.run()
 }
@@ -62,6 +64,14 @@ struct FirstPass<'a, 'b> {
     /// Math environment brace nesting.
     brace_context_stack: Vec<u8>,
     brace_context_next: usize,
+    /// True while `parse_line` lexes ATX heading content: heading text is
+    /// trimmed before the block-anchor tail check, and heading anchors are
+    /// final (no paragraph-continuation demotion).
+    in_atx_heading: bool,
+    /// A line-tail anchor whose line may turn out to be an interior paragraph
+    /// line — Obsidian binds anchors to the paragraph's last line only, so
+    /// `parse_paragraph` demotes it to text when the paragraph continues.
+    pending_line_anchor: Option<TreeIndex>,
 }
 
 impl<'a, 'b> FirstPass<'a, 'b> {
@@ -707,6 +717,7 @@ impl<'a, 'b> FirstPass<'a, 'b> {
                 TableParseMode::Disabled
             };
             let (next_ix, brk) = self.parse_line(ix, None, scan_mode);
+            let line_anchor = self.pending_line_anchor.take();
 
             // break out when we find a table
             if let Some(Item {
@@ -802,6 +813,15 @@ impl<'a, 'b> FirstPass<'a, 'b> {
                 }
             }
 
+            // the paragraph continues, so the previous line's tail anchor was
+            // interior — Obsidian binds anchors to the paragraph's last line
+            // only (probe ^a07)
+            if let Some(anchor_ix) = line_anchor {
+                self.tree[anchor_ix].item.body = ItemBody::Text {
+                    backslash_escaped: false,
+                };
+            }
+
             ix = next_ix + line_start.bytes_scanned();
             if let Some(item) = brk {
                 self.tree.append(item);
@@ -885,11 +905,14 @@ impl<'a, 'b> FirstPass<'a, 'b> {
     /// Obsidian block anchors (`^id` at the tail of a line): if the pending
     /// text run ending at `text_end` finishes with an anchor, append the
     /// preceding text and the anchor item instead of plain text, and return
-    /// `true`.
+    /// the anchor item's tree index.
     ///
-    /// Reference semantics (parser-bench ground truth): the anchor is `^` plus
-    /// a non-empty run of `[A-Za-z0-9-]`, preceded by the line start or a
-    /// space/tab, and followed only by whitespace up to the line end. The
+    /// Dialect semantics (Obsidian 1.12.7 blockid regex, probe file
+    /// `zzprobe-anchors-a.md`): the anchor is `^` plus a non-empty run of
+    /// `[A-Za-z0-9-]`, preceded by the line start or a space/tab. Call sites
+    /// enforce the tail law: paragraph anchors must touch the very end of the
+    /// text (no trailing whitespace) and bind only to the paragraph's last
+    /// line; heading and table-cell text is trimmed before the check. The
     /// whole anchor must lie inside the pending text run — a caret already
     /// consumed by another construct (escape, superscript delimiter) never
     /// forms an anchor.
@@ -899,37 +922,36 @@ impl<'a, 'b> FirstPass<'a, 'b> {
         begin_text: usize,
         text_end: usize,
         backslash_escaped: bool,
-    ) -> bool {
+    ) -> Option<TreeIndex> {
         if !self
             .options
             .contains(Options::ENABLE_OBSIDIAN_BLOCK_ANCHORS)
         {
-            return false;
+            return None;
         }
         let bytes = self.text.as_bytes();
         let id_len = scan_rev_while(&bytes[begin_text..text_end], |b| {
             b.is_ascii_alphanumeric() || b == b'-'
         });
         if id_len == 0 {
-            return false;
+            return None;
         }
         let id_start = text_end - id_len;
         // the caret must sit inside the pending text run
         if id_start <= begin_text || bytes[id_start - 1] != b'^' {
-            return false;
+            return None;
         }
         let caret = id_start - 1;
         // preceded by the line start or a raw space/tab
         if caret != line_start && !matches!(bytes[caret - 1], b' ' | b'\t') {
-            return false;
+            return None;
         }
         self.tree.append_text(begin_text, caret, backslash_escaped);
-        self.tree.append(Item {
+        Some(self.tree.append(Item {
             start: caret,
             end: text_end,
             body: ItemBody::ObsidianBlockAnchor,
-        });
-        true
+        }))
     }
 
     /// Parse a line of input, appending text and items to tree.
@@ -1013,12 +1035,28 @@ impl<'a, 'b> FirstPass<'a, 'b> {
 
                     let trailing_whitespace =
                         scan_rev_while(&bytes[..ix], is_ascii_whitespace_no_nl);
-                    let anchored = self.append_line_tail_anchor(
-                        start,
-                        begin_text,
-                        ix - trailing_whitespace,
-                        backslash_escaped,
-                    );
+                    // Obsidian's blockid regex puts `$` immediately after the
+                    // id (probe ^a02): whitespace between the id and the line
+                    // ending kills a paragraph anchor. ATX heading text is
+                    // trimmed before the check, so heading tails keep the trim.
+                    let anchor = if self.in_atx_heading || trailing_whitespace == 0 {
+                        self.append_line_tail_anchor(
+                            start,
+                            begin_text,
+                            ix - trailing_whitespace,
+                            backslash_escaped,
+                        )
+                    } else {
+                        None
+                    };
+                    if !self.in_atx_heading {
+                        // A paragraph line-tail anchor only survives if this
+                        // turns out to be the paragraph's last line (probe
+                        // ^a07) — parse_paragraph demotes it when the
+                        // paragraph continues.
+                        self.pending_line_anchor = anchor;
+                    }
+                    let anchored = anchor.is_some();
                     if trailing_whitespace >= 2 {
                         i -= trailing_whitespace;
                         if !anchored {
@@ -1387,9 +1425,15 @@ impl<'a, 'b> FirstPass<'a, 'b> {
             let trailing_whitespace =
                 scan_rev_while(&bytes[begin_text..final_ix], is_ascii_whitespace_no_nl);
             let text_end = final_ix - trailing_whitespace;
-            // anchors bind to line tails, not to table-cell tails
-            let anchored = mode != TableParseMode::Active
-                && self.append_line_tail_anchor(start, begin_text, text_end, backslash_escaped);
+            // Table cells (probe ^a15) and ATX headings have their text
+            // trimmed before the tail check; a paragraph anchor must touch
+            // the very end of the paragraph (probe ^a02).
+            let anchored = (mode == TableParseMode::Active
+                || self.in_atx_heading
+                || trailing_whitespace == 0)
+                && self
+                    .append_line_tail_anchor(start, begin_text, text_end, backslash_escaped)
+                    .is_some();
             if !anchored {
                 // need to close text at eof
                 self.tree.append_text(begin_text, text_end, backslash_escaped);
@@ -1805,6 +1849,7 @@ impl<'a, 'b> FirstPass<'a, 'b> {
         let header_node_idx = self.tree.push(); // so that we can set the endpoint later
 
         // trim the trailing attribute block before parsing the entire line, if necessary
+        self.in_atx_heading = true;
         let (end, content_end, attrs) = if self.options.contains(Options::ENABLE_HEADING_ATTRIBUTES)
         {
             // the start of the next line is the end of the header since the
@@ -1828,6 +1873,7 @@ impl<'a, 'b> FirstPass<'a, 'b> {
             }
             (ix, ix, None)
         };
+        self.in_atx_heading = false;
         self.tree[header_node_idx].item.end = end;
 
         // remove trailing matter from header text
