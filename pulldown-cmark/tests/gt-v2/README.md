@@ -5,10 +5,10 @@ first-class Obsidian extensions this fork adds — block anchors, callout
 type/fold fields, embed `!`-folding, wikilink fragments — plus adversarial
 cases, over real wiki corpus inputs and synthesized edge files.
 
-**Status: NOT FROZEN.** Freeze gates: (1) Advisor review, (2) re-derivation
-of open-question fixtures against the Stream H dialect-conformance spec as
-its sections stabilize. The v1 pack (parser-bench `fixtures/`, frozen
-2026-07-17) is untouched by this pack; v1 lands separately at `tests/gt-v1/`.
+**Status: FROZEN** (see the `FROZEN` marker: approver, MANIFEST sha, pin).
+Contents are immutable; corrections go to a versioned successor pack (GT-v3),
+never in-place. The v1 pack (parser-bench `fixtures/`, frozen 2026-07-17) is
+untouched by this pack; v1 lands separately at `tests/gt-v1/`.
 
 ## Layout
 

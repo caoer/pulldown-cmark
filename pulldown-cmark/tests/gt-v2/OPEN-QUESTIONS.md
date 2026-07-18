@@ -11,9 +11,21 @@ remains open and how each formerly-open ruling was settled.
 
 | # | Concern | Status |
 |---|---------|--------|
-| OQ-13 | Nested-callout span start convention: encoded at the innermost `>` of the head line (vanilla pulldown nested-BlockQuote ranges, probe @eea0453) | fork-side — confirm when callout events land; not a dialect question |
-| OQ-18 | Callout `info.type` is encoded NORMALIZED (spec §2.2: pipe-split → trim → lowercase → ws-runs→dash; metadata verbatim in `info.metadata`). Raw head text is recoverable from the span. The names-contract `Callout { kind }` predates this ruling | fork-side decision: parser normalizes vs post-pass; GT asserts the normalized value either way — flagged to fork leader |
 | spec §6 | Stream H's own remaining unknowns (7 items: `getFirstLinkpathDest` tie-break, fold `-` initial DOM state, etc.) | resolution/render-level; none affect node emission in this pack — future GT-v3 candidates |
+
+## Resolved fork-side (ruled by fork leader 5c8052b8, pre-freeze)
+
+- **OQ-13 — span convention holds by construction.** Callout is a field ON
+  the existing BlockQuote tag; spans are vanilla pulldown nested-BQ ranges,
+  unchanged from `eea0453`. Pinned as an explicit invariant on the
+  callouts-dialect-fix worker so recognition changes cannot drift it.
+- **OQ-18 — normalized `info.type` ruled compatible.** Contract amendment
+  in flight (callouts-dialect-fix): fork `Callout` gains additive
+  `metadata: Option<CowStr>` (verbatim); `kind` stays the RAW pre-pipe
+  slice (span-faithful); normalization lives in a public helper
+  `canonical_kind()` = trim + lowercase + ws-runs→dash. GT-v2's
+  `info.type` asserts the helper's output; `info.metadata` the verbatim
+  string. Parser never mutates source-derived slices.
 
 ## Resolved (all rulings per spec section, probe-confirmed)
 

@@ -1,0 +1,16 @@
+# FROZEN — GT-v2 ground-truth pack
+
+frozen_at: 2026-07-18T02:57:43Z
+frozen_by: 57b14a70 (Stream I, gt-v2-pack)
+approved_by: c3b85275 (Advisor — quality review + freeze confirmation)
+condition_precedent: fork-side rulings OQ-13 + OQ-18 by 5c8052b8
+  (span convention pinned as invariant; normalized info.type +
+  info.metadata ruled compatible with Callout kind=raw + canonical_kind())
+fixtures: 19  # 5 corpus-drawn, 11 synthesized adversarial, 3 Stream H probes
+expected_nodes: 662
+verify: tools/verify.py — 0 violations at freeze
+manifest_sha256: 9c0fdf3b53b3c2d72127baa2a4c2aff5748c4d7dcd686dd6c7e19612439d0dc0
+dialect_spec: results/obsidian-dialect-conformance.md (Stream H, complete)
+
+Pack contents are immutable. Post-freeze corrections go to a versioned
+successor pack (GT-v3), never in-place. Basis per fixture: MANIFEST.tsv.
