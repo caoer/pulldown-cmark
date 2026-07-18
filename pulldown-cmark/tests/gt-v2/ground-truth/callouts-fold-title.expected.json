@@ -72,18 +72,6 @@
   },
   {
    "info": {
-    "fold": "-",
-    "type": "note"
-   },
-   "kind": "callout",
-   "span": [
-    216,
-    252
-   ],
-   "text_prefix_16b": "> [!note]-Title-"
-  },
-  {
-   "info": {
     "fold": "+",
     "type": "info"
    },

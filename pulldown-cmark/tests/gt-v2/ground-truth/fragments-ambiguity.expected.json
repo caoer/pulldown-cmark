@@ -229,6 +229,18 @@
   },
   {
    "info": {
+    "alias": "alias-only",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    613,
+    628
+   ],
+   "text_prefix_16b": "[[|alias-only]] "
+  },
+  {
+   "info": {
     "heading": "",
     "target": ""
    },

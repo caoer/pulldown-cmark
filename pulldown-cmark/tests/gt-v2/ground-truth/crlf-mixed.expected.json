@@ -2,6 +2,19 @@
  "file": "adversarial/crlf-mixed.md",
  "nodes": [
   {
+   "info": {
+    "keys": [
+     "title"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    27
+   ],
+   "text_prefix_16b": "---\r\ntitle: crlf"
+  },
+  {
    "hpath": "CRLF heading ^crlf-h",
    "kind": "heading",
    "span": [
