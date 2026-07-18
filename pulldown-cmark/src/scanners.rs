@@ -313,6 +313,14 @@ impl<'a> LineStart<'a> {
     /// single separating whitespace char is consumed and the title is
     /// left as inline content. On failure the position is restored.
     pub(crate) fn scan_obsidian_callout_tag(&mut self) -> Option<ObsidianCalloutScan> {
+        // Obsidian's quote tokenizer strips `>` plus at most one literal
+        // space — never a tab. The blockquote marker scan accepts a tab
+        // as the separator via CommonMark tab expansion, but then `[!`
+        // is not at content offset 0, so the regex cannot match
+        // (probe zzprobe-v3c-followup).
+        if self.ix > 0 && self.bytes[self.ix - 1] == b'\t' {
+            return None;
+        }
         let saved_ix = self.ix;
         if !(self.scan_ch(b'[') && self.scan_ch(b'!')) {
             self.ix = saved_ix;

@@ -522,3 +522,48 @@ fn leading_whitespace_before_tag_is_plain() {
     let src = ">   [!note] spaced\n";
     assert_eq!(quotes(src, OBSIDIAN), vec![(None, None, 0..src.len())]);
 }
+
+#[test]
+fn two_spaces_before_tag_is_plain() {
+    // probe zzprobe-v3c-followup: the tokenizer strips `>` plus at most
+    // ONE literal space, so a second space puts [! at offset 1 => plain
+    let src = ">  [!note] two spaces\n";
+    assert_eq!(quotes(src, OBSIDIAN), vec![(None, None, 0..src.len())]);
+}
+
+#[test]
+fn tab_after_marker_is_plain() {
+    // probe zzprobe-v3c-followup: the tokenizer never treats a tab as
+    // the one stripped space, so `>\t[!note]` is a plain quote even
+    // though CommonMark tab expansion lands the marker scan on `[`
+    let src = ">\t[!note] tabbed\n";
+    assert_eq!(quotes(src, OBSIDIAN), vec![(None, None, 0..src.len())]);
+    // the head text survives as inline content, not a callout tag
+    assert!(events(src, OBSIDIAN)
+        .iter()
+        .any(|(ev, r)| matches!(ev, Event::Text(_)) && &src[r.clone()] == "!note"));
+}
+
+#[test]
+fn tab_after_marker_flag_off_unchanged() {
+    // flags OFF must stay byte-identical: the obsidian flag makes no
+    // difference on the tab edge, and plain-blockquote tab handling
+    // (one column consumed as separator, rest is content indent) holds
+    let src = ">\t[!note] tabbed\n";
+    assert_eq!(events(src, Options::empty()), events(src, OBSIDIAN));
+    assert_eq!(quotes(src, Options::empty()), vec![(None, None, 0..src.len())]);
+}
+
+#[test]
+fn indented_marker_is_a_callout() {
+    // probe zzprobe-v3c-followup: up to three spaces of indent before
+    // `>` is fine — the strip rule applies to the quote content, not
+    // the marker's own indentation
+    let src = "   > [!note] indented\n";
+    // the quote span starts at the `>` marker (upstream convention)
+    assert_eq!(
+        quotes(src, OBSIDIAN),
+        vec![(None, callout("note", None), 3..src.len())],
+    );
+    assert_eq!(texts(src, OBSIDIAN), vec!["indented"]);
+}
