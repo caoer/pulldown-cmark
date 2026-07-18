@@ -1,0 +1,371 @@
+{
+ "file": "adversarial/kitchen-sink.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "title",
+     "tags",
+     "status"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    86
+   ],
+   "text_prefix_16b": "---\ntitle: kitch"
+  },
+  {
+   "hpath": "Kitchen sink ^ks-h1",
+   "kind": "heading",
+   "span": [
+    88,
+    109
+   ],
+   "text_prefix_16b": "# Kitchen sink ^"
+  },
+  {
+   "info": {
+    "id": "ks-h1"
+   },
+   "kind": "anchor",
+   "span": [
+    103,
+    109
+   ],
+   "text_prefix_16b": "^ks-h1\n\nOpening "
+  },
+  {
+   "info": {
+    "target": "Plain"
+   },
+   "kind": "wikilink",
+   "span": [
+    134,
+    143
+   ],
+   "text_prefix_16b": "[[Plain]] and [["
+  },
+  {
+   "info": {
+    "alias": "display",
+    "heading": "Sub#Path",
+    "target": "Deep"
+   },
+   "kind": "wikilink",
+   "span": [
+    148,
+    173
+   ],
+   "text_prefix_16b": "[[Deep#Sub#Path|"
+  },
+  {
+   "info": {
+    "block": "blk",
+    "target": "Embedded"
+   },
+   "kind": "embed",
+   "span": [
+    178,
+    196
+   ],
+   "text_prefix_16b": "![[Embedded#^blk"
+  },
+  {
+   "hpath": "Kitchen sink ^ks-h1/Constructs interleaved ^ks-h2",
+   "kind": "heading",
+   "span": [
+    199,
+    231
+   ],
+   "text_prefix_16b": "## Constructs in"
+  },
+  {
+   "info": {
+    "id": "ks-h2"
+   },
+   "kind": "anchor",
+   "span": [
+    225,
+    231
+   ],
+   "text_prefix_16b": "^ks-h2\n\n> [!oute"
+  },
+  {
+   "info": {
+    "fold": "-",
+    "type": "outer"
+   },
+   "kind": "callout",
+   "span": [
+    233,
+    489
+   ],
+   "text_prefix_16b": "> [!outer]- Fold"
+  },
+  {
+   "info": {
+    "target": "embed-in-title"
+   },
+   "kind": "embed",
+   "span": [
+    263,
+    282
+   ],
+   "text_prefix_16b": "![[embed-in-titl"
+  },
+  {
+   "info": {
+    "heading": "in-title",
+    "target": "link"
+   },
+   "kind": "wikilink",
+   "span": [
+    287,
+    304
+   ],
+   "text_prefix_16b": "[[link#in-title]"
+  },
+  {
+   "info": {
+    "heading": "Head",
+    "target": "body-link"
+   },
+   "kind": "wikilink",
+   "span": [
+    321,
+    339
+   ],
+   "text_prefix_16b": "[[body-link#Head"
+  },
+  {
+   "info": {
+    "id": "in-outer"
+   },
+   "kind": "anchor",
+   "span": [
+    359,
+    368
+   ],
+   "text_prefix_16b": "^in-outer\n> > [!"
+  },
+  {
+   "info": {
+    "fold": "+",
+    "type": "inner"
+   },
+   "kind": "callout",
+   "span": [
+    371,
+    489
+   ],
+   "text_prefix_16b": "> [!inner]+ nest"
+  },
+  {
+   "info": {
+    "checked": false,
+    "depth": 1
+   },
+   "kind": "task",
+   "span": [
+    399,
+    459
+   ],
+   "text_prefix_16b": "- [ ] nested tas"
+  },
+  {
+   "info": {
+    "alias": "al",
+    "target": "task-embed"
+   },
+   "kind": "embed",
+   "span": [
+    428,
+    446
+   ],
+   "text_prefix_16b": "![[task-embed|al"
+  },
+  {
+   "info": {
+    "id": "in-inner"
+   },
+   "kind": "anchor",
+   "span": [
+    480,
+    489
+   ],
+   "text_prefix_16b": "^in-inner\n\nA tab"
+  },
+  {
+   "kind": "table",
+   "span": [
+    527,
+    645
+   ],
+   "text_prefix_16b": "| construct | sa"
+  },
+  {
+   "info": {
+    "heading": "F",
+    "target": "T"
+   },
+   "kind": "wikilink",
+   "span": [
+    586,
+    593
+   ],
+   "text_prefix_16b": "[[T#F]] |\n| embe"
+  },
+  {
+   "info": {
+    "block": "b",
+    "target": "T"
+   },
+   "kind": "embed",
+   "span": [
+    606,
+    615
+   ],
+   "text_prefix_16b": "![[T#^b]] |\n| co"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    627,
+    643
+   ],
+   "text_prefix_16b": "`[[not-a-link]]`"
+  },
+  {
+   "info": {
+    "info_string": "text"
+   },
+   "kind": "fence",
+   "span": [
+    647,
+    726
+   ],
+   "text_prefix_16b": "```text\n# not a "
+  },
+  {
+   "kind": "comment",
+   "span": [
+    728,
+    817
+   ],
+   "text_prefix_16b": "%% comment wrapp"
+  },
+  {
+   "info": {
+    "target": "embed-in-comment"
+   },
+   "kind": "embed",
+   "span": [
+    748,
+    769
+   ],
+   "text_prefix_16b": "![[embed-in-comm"
+  },
+  {
+   "info": {
+    "heading": "in-comment",
+    "target": "link"
+   },
+   "kind": "wikilink",
+   "span": [
+    774,
+    793
+   ],
+   "text_prefix_16b": "[[link#in-commen"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    826,
+    860
+   ],
+   "text_prefix_16b": "`` `![[double-ba"
+  },
+  {
+   "hpath": "Kitchen sink ^ks-h1/Constructs interleaved ^ks-h2/Deep section ^ks-h3",
+   "kind": "heading",
+   "span": [
+    874,
+    897
+   ],
+   "text_prefix_16b": "### Deep section"
+  },
+  {
+   "info": {
+    "id": "ks-h3"
+   },
+   "kind": "anchor",
+   "span": [
+    891,
+    897
+   ],
+   "text_prefix_16b": "^ks-h3\n\n1. order"
+  },
+  {
+   "info": {
+    "heading": "link",
+    "target": "ordered"
+   },
+   "kind": "wikilink",
+   "span": [
+    915,
+    931
+   ],
+   "text_prefix_16b": "[[ordered#link]]"
+  },
+  {
+   "info": {
+    "checked": true,
+    "depth": 2
+   },
+   "kind": "task",
+   "span": [
+    959,
+    1025
+   ],
+   "text_prefix_16b": "- [x] checked ne"
+  },
+  {
+   "info": {
+    "alias": "z",
+    "block": "y",
+    "target": "X"
+   },
+   "kind": "wikilink",
+   "span": [
+    999,
+    1009
+   ],
+   "text_prefix_16b": "[[X#^y|z]] ^orde"
+  },
+  {
+   "info": {
+    "id": "ordered-anchor"
+   },
+   "kind": "anchor",
+   "span": [
+    1010,
+    1025
+   ],
+   "text_prefix_16b": "^ordered-anchor\n"
+  },
+  {
+   "info": {
+    "id": "ks-final"
+   },
+   "kind": "anchor",
+   "span": [
+    1065,
+    1074
+   ],
+   "text_prefix_16b": "^ks-final\n"
+  }
+ ],
+ "schema": "gt-v2"
+}

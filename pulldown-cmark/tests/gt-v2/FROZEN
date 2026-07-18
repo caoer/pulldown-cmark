@@ -1,3 +1,29 @@
+# FROZEN — GT-v2.2 (GT-v2 pack + amendments 1–2)
+
+version: v2.2
+amended_at: 2026-07-18T03:27:56Z
+amended_by: ffa18e3b (gt-v2-2-amendment worker, 18-02-meridian-rs)
+amendment: amendments/v2.2/ — spec §1.2 list-item rulings (kitchen-sink
+  ^nested-task true no-fire, y00/z00; law 3: no listItems[].id inside
+  quote/callout contexts, y01/y02/z01); additive overlay, v2 AND v2.1
+  files untouched. Ledger: amendments/v2.2/AMENDMENT.md. Overlay rule:
+  per fixture, prefer amendments/v2.2/ground-truth/<stem>.expected.json,
+  else amendments/v2.1/…, else base.
+amended_files: 1  # kitchen-sink (-1 anchor node ^nested-task [447,459])
+expected_nodes: 663  # v2.2 view; v2.1 view remains 664, base view 662
+verify: amendments/v2.2/tools/verify-overlay.py — 0 violations (frozen
+  tools/verify.py run on the three-layer view); v2.1 overlay + base
+  verify.py — both still 0 violations
+amendment_manifest_sha256: 36190669de3133684a7a4b5c224ca224c2b5c4085c9160509c079bc341f24cf0
+ruling_record: spec §1.2 table rows (multi-line-item, in-quote-item) +
+  probes/zzprobe-v3d-followup.md + probes/zzprobe-v3e-followup.md
+  (session 18-02-meridian-rs)
+
+v2.2 contents (amendments/v2.2/) are immutable on commit. Further
+corrections: amendments/v2.3/ or GT-v3, never in place.
+
+---
+
 # FROZEN — GT-v2.1 (GT-v2 pack + amendment 1)
 
 version: v2.1

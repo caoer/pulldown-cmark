@@ -1,0 +1,5 @@
+file	sha256	provenance	basis	notes
+AMENDMENT.md	055f1b112ea408e8e87d0101b62349b5d71b2f246d38b748e49d32ceaa5ee15f	amendment-2@18-02-meridian-rs (worker ffa18e3b)	spec-h:1.2-listitem-rulings@2026-07-18	amendment ledger: rulings, amended/superseded rows, law-3 sweep, overlay rule
+ground-truth/kitchen-sink.expected.json	a4397fd2947aba28ba53f123c98f052e16303283cdfd731e731d480c0f8e9b27	amendment-2@18-02-meridian-rs (worker ffa18e3b)	spec-h:1.2-listitem-rulings@2026-07-18	full replacement: -anchor ^nested-task [447,459] (probe y00 true no-fire; z00 excludes overwrite); 33 nodes
+tools/rederive.py	d1016a21dad68bd5ffd4f41c5005fa544cb32a2b4f87c517a9aad75ce2b484b4	amendment-2@18-02-meridian-rs (worker ffa18e3b)	spec-h:1.2-listitem-rulings@2026-07-18	frozen deriver + one rule change; lane-drift guard
+tools/verify-overlay.py	e7eac499a7826ef0bbb454275f8a05bd5e31c398664a0cd5269f0418c9f5c26a	amendment-2@18-02-meridian-rs (worker ffa18e3b)	spec-h:1.2-listitem-rulings@2026-07-18	runs frozen verify.py on the three-layer overlay view
