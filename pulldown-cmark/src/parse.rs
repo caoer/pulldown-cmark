@@ -2227,6 +2227,7 @@ impl<'a> Allocations<'a> {
             &mut self.callouts[ix.0.get() - 1],
             Callout {
                 kind: "".into(),
+                metadata: None,
                 fold: None,
             },
         )

@@ -105,13 +105,13 @@ const HTML_TAGS: [&str; 62] = [
 pub(crate) struct ObsidianCalloutScan {
     pub type_start: usize,
     pub type_end: usize,
+    /// Byte range of the verbatim metadata string after the first `|`
+    /// inside the brackets, if any.
+    pub meta: Option<(usize, usize)>,
     pub fold: Option<CalloutFold>,
     /// The rest of the head line was blank and has been consumed
     /// (including the newline), mirroring the GFM blockquote tag.
     pub consumed_to_eol: bool,
-    /// Whitespace was skipped between the blockquote marker and `[!`;
-    /// the stricter GFM scanner would not have matched here.
-    pub leading_ws: bool,
 }
 
 /// Case-insensitive GFM alert kind for a callout type as written,
@@ -295,68 +295,90 @@ impl<'a> LineStart<'a> {
         tag
     }
 
-    /// Scans an Obsidian callout header after a blockquote marker:
-    /// `[!type]`, `[!type]+`, `[!type]-`, with an arbitrary type in
-    /// `[A-Za-z0-9_-]+`. Unlike the GFM variant above, whitespace may
-    /// separate the marker from `[!`, and text (the callout title) may
-    /// follow the tag on the same line.
+    /// Scans an Obsidian callout header after a blockquote marker,
+    /// mirroring Obsidian's recognition regex over the first line's
+    /// content: `/^\[!([^\]]+)\]([+\-]?)(?:\s|$)/`, with the bracket
+    /// content split at its first `|` into type and metadata
+    /// (probes: zzprobe-callouts K02-K13, zzprobe-oq OQ5/OQ7).
+    ///
+    /// The scan is byte-based and CRLF-safe: `\r`/`\n` terminate the
+    /// line and are never bracket content. After the optional single
+    /// fold marker there must be whitespace or end-of-line, with the
+    /// regex's backtracking semantics: `[!faq]+-` fails the fold path
+    /// (`-` after the fold) and the no-fold path (`+` after `]`), so
+    /// it is a plain quote.
     ///
     /// On a match, consumes through the tag; if the rest of the line is
-    /// blank it is consumed too (mirroring the GFM tag), otherwise a
-    /// single separating space is consumed and the title is left as
-    /// inline content. On failure the position is restored.
+    /// blank it is consumed too (mirroring the GFM tag), otherwise the
+    /// single separating whitespace char is consumed and the title is
+    /// left as inline content. On failure the position is restored.
     pub(crate) fn scan_obsidian_callout_tag(&mut self) -> Option<ObsidianCalloutScan> {
         let saved_ix = self.ix;
-        let ws_start = self.ix;
-        while self
-            .bytes
-            .get(self.ix)
-            .is_some_and(|&c| c == b' ' || c == b'\t')
-        {
-            self.ix += 1;
-        }
-        let leading_ws = self.ix > ws_start;
         if !(self.scan_ch(b'[') && self.scan_ch(b'!')) {
             self.ix = saved_ix;
             return None;
         }
-        let type_start = self.ix;
-        while self
-            .bytes
-            .get(self.ix)
-            .is_some_and(|&c| c.is_ascii_alphanumeric() || c == b'_' || c == b'-')
-        {
-            self.ix += 1;
+        let content_start = self.ix;
+        let mut pipe = None;
+        loop {
+            match self.bytes.get(self.ix) {
+                Some(b']') => break,
+                None | Some(b'\n') | Some(b'\r') => {
+                    self.ix = saved_ix;
+                    return None;
+                }
+                Some(b'|') => {
+                    if pipe.is_none() {
+                        pipe = Some(self.ix);
+                    }
+                    self.ix += 1;
+                }
+                Some(_) => self.ix += 1,
+            }
         }
-        let type_end = self.ix;
-        if type_end == type_start || !self.scan_ch(b']') {
+        let content_end = self.ix;
+        if content_end == content_start {
             self.ix = saved_ix;
             return None;
         }
+        self.ix += 1; // the `]`
+        fn is_ws_or_eol(b: Option<&u8>) -> bool {
+            matches!(b, None | Some(b' ' | b'\t' | b'\n' | b'\r'))
+        }
         let fold = match self.bytes.get(self.ix) {
-            Some(b'+') => {
+            Some(&c @ (b'+' | b'-')) if is_ws_or_eol(self.bytes.get(self.ix + 1)) => {
                 self.ix += 1;
-                Some(CalloutFold::Open)
+                Some(if c == b'+' {
+                    CalloutFold::Open
+                } else {
+                    CalloutFold::Folded
+                })
             }
-            Some(b'-') => {
-                self.ix += 1;
-                Some(CalloutFold::Folded)
+            b if is_ws_or_eol(b) => None,
+            _ => {
+                self.ix = saved_ix;
+                return None;
             }
-            _ => None,
+        };
+        let (type_end, meta) = match pipe {
+            Some(p) => (p, Some((p + 1, content_end))),
+            None => (content_end, None),
         };
         let consumed_to_eol = if let Some(nl) = scan_blank_line(&self.bytes[self.ix..]) {
             self.ix += nl;
             true
         } else {
-            let _ = self.scan_ch(b' ');
+            // not at EOL, so the required `\s` was a space or tab;
+            // consume exactly that one char, like the regex match does
+            self.ix += 1;
             false
         };
         Some(ObsidianCalloutScan {
-            type_start,
+            type_start: content_start,
             type_end,
+            meta,
             fold,
             consumed_to_eol,
-            leading_ws,
         })
     }
 

@@ -172,16 +172,23 @@ pub enum CalloutFold {
 }
 
 /// An Obsidian callout header on a blockquote: `> [!type]`, with an optional
-/// fold marker (`> [!type]+` / `> [!type]-`).
+/// metadata string (`> [!type|metadata]`) and an optional fold marker
+/// (`> [!type]+` / `> [!type]-`).
 ///
 /// Unlike GFM alerts ([`BlockQuoteKind`]), the callout type is arbitrary.
 /// Only parsed & populated with [`Options::ENABLE_OBSIDIAN_CALLOUTS`].
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Callout<'a> {
-    /// The callout type as written, e.g. `note` in `> [!note]`.
+    /// The callout type as written (the raw slice before any `|`),
+    /// e.g. `note` in `> [!note]`. See [`Callout::canonical_kind`] for
+    /// the normalized form Obsidian matches styling against.
     #[cfg_attr(feature = "serde", serde(borrow))]
     pub kind: CowStr<'a>,
+    /// The verbatim metadata string after the first `|` inside the
+    /// brackets, e.g. `#ff0000` in `> [!quote|#ff0000]`.
+    #[cfg_attr(feature = "serde", serde(borrow))]
+    pub metadata: Option<CowStr<'a>>,
     /// The fold marker following the type, if any.
     pub fold: Option<CalloutFold>,
 }
@@ -190,7 +197,29 @@ impl<'a> Callout<'a> {
     pub fn into_static(self) -> Callout<'static> {
         Callout {
             kind: self.kind.into_static(),
+            metadata: self.metadata.map(|m| m.into_static()),
             fold: self.fold,
+        }
+    }
+
+    /// The callout type normalized the way Obsidian does before matching
+    /// styling: trimmed, lowercased, each whitespace run replaced by a
+    /// single `-`. E.g. `[!My Custom  Type]` → `my-custom-type`,
+    /// `[! NOTE ]` → `note`.
+    pub fn canonical_kind(&self) -> CowStr<'a> {
+        let mut canonical = String::new();
+        for word in self.kind.split_whitespace() {
+            if !canonical.is_empty() {
+                canonical.push('-');
+            }
+            for c in word.chars() {
+                canonical.extend(c.to_lowercase());
+            }
+        }
+        if canonical == self.kind.as_ref() {
+            self.kind.clone()
+        } else {
+            canonical.into()
         }
     }
 }
