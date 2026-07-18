@@ -1,4 +1,26 @@
-# FROZEN — GT-v2 ground-truth pack
+# FROZEN — GT-v2.1 (GT-v2 pack + amendment 1)
+
+version: v2.1
+amended_at: 2026-07-18T03:16:00Z
+amended_by: 7e02d38e (gt-v2-erratum-audit worker, 18-02-meridian-rs)
+amendment: amendments/v2.1/ — spec §1.3 erratum (callout title-line tail
+  anchors DO fire); additive overlay, v2 files untouched. Ledger:
+  amendments/v2.1/AMENDMENT.md. Overlay rule: per fixture, prefer
+  amendments/v2.1/ground-truth/<stem>.expected.json, else base.
+amended_files: 2  # anchors-edge-positions, callouts-fold-title (+1 anchor node each)
+expected_nodes: 664  # overlay view; base view remains 662
+verify: amendments/v2.1/tools/verify-overlay.py — 0 violations (frozen
+  tools/verify.py run on the overlay view); base tools/verify.py — 0 violations
+amendment_manifest_sha256: b2dce887a6f67aa8bf3fc5e14e607d3d874f168bb36f822fb81d35f9d02ccd33
+erratum_record: inbox/erratum-oq14-for-gt-v3.md + probes/zzprobe-v3-followup.md
+  + probes/zzprobe-v3b-followup.md (session 18-02-meridian-rs)
+
+v2.1 contents (amendments/v2.1/) are immutable on commit. Further
+corrections: amendments/v2.2/ or GT-v3, never in place.
+
+---
+
+# FROZEN — GT-v2 ground-truth pack (original record, retained verbatim)
 
 frozen_at: 2026-07-18T02:57:43Z
 frozen_by: 57b14a70 (Stream I, gt-v2-pack)
