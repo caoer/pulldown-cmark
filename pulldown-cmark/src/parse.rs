@@ -960,16 +960,40 @@ impl<'input> ParserInner<'input> {
             if end_ix <= start_ix {
                 return None;
             }
-            let wikilink = match scan_wikilink_pipe(
+            let obsidian_alias = self
+                .options
+                .contains(Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS);
+            let pipe_scan = match scan_wikilink_pipe(
                 block_text,
                 start_ix, // bounded by closing tag
                 end_ix - start_ix,
             ) {
+                // Obsidian: an empty path before the first pipe disables the
+                // alias split — the raw body (pipe included) becomes the link,
+                // so `[[|alias-only]]` IS tokenized [probe: zzprobe-oq OQ11].
+                Some((_, path)) if obsidian_alias && path.is_empty() => None,
+                scan => scan,
+            };
+            let wikilink = match pipe_scan {
                 Some((rest, wikitext)) => {
                     // bail early if the wikiname would be empty
                     if wikitext.is_empty() {
                         return None;
                     }
+                    // Obsidian: an escaped pipe still splits, and the escape
+                    // backslash is not part of the link — `[[a\|b]]` → link
+                    // `a`, display `b` [probe: zzprobe-links L09]. A raw `\`
+                    // as the whole path (`[[\\|b]]`) is unprobed; treat the
+                    // stripped-empty name like the upstream empty-name bail.
+                    let wikitext = if obsidian_alias {
+                        let stripped = wikitext.strip_suffix('\\').unwrap_or(wikitext);
+                        if stripped.is_empty() {
+                            return None;
+                        }
+                        stripped
+                    } else {
+                        wikitext
+                    };
                     // [[WikiName|rest]]
                     if rest >= end_ix {
                         // Empty display text: the `|` is immediately followed
@@ -3452,6 +3476,17 @@ text
                 "x",
                 Some(WikiLinkFragment::BlockAnchor("b".into())),
             ),
+            // Raw link text kept for fragment-only degenerates
+            // [probe: probes/zzprobe-oq.md OQ12].
+            ("[[##]]", "", Some(WikiLinkFragment::Heading("#".into()))),
+            // Empty path before the pipe: the pipe is not a separator, the
+            // raw body is the link [probe: probes/zzprobe-oq.md OQ11].
+            ("[[|alias-only]]", "|alias-only", None),
+            ("[[|]]", "|", None),
+            // Unprobed degenerate: the leading escape is consumed at the
+            // inline level before wikilink scanning, leaving the empty-path
+            // form `|b`.
+            ("[[\\|b]]", "|b", None),
         ];
         for (input, target, fragment) in cases {
             let got = wikilink_of(input).unwrap_or_else(|| {
@@ -3462,7 +3497,11 @@ text
         }
 
         // Degenerate bodies never become wikilinks, and never panic.
-        for input in ["![[]]", "![[|]]", "[[]]", "[[|]]"] {
+        // `[[]]` / `![[]]` produce no node [probe: zzprobe-links L17,
+        // zzprobe-oq OQ8]. `[[\\|b]]` (a raw `\` as the whole path) is
+        // unprobed; the stripped-empty name bails like the upstream empty
+        // name.
+        for input in ["![[]]", "[[]]", "[[\\\\|b]]", "![[\\\\|b]]"] {
             let has_link = Parser::new_ext(input, opts).any(|event| {
                 matches!(
                     event,
@@ -3471,6 +3510,273 @@ text
             });
             assert!(!has_link, "{input}: should degrade to text");
         }
+    }
+
+    #[test]
+    fn obsidian_empty_path_alias_tokenizes() {
+        // `[[|alias-only]]` IS a wikilink: with an empty path the pipe is
+        // not a separator, the raw body (pipe included) is the link
+        // [probe: probes/zzprobe-oq.md OQ11].
+        let input = "[[|alias-only]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..15),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: false,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("|alias-only"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("|alias-only"),
+                        fragment: None,
+                    }),
+                }),
+                0..15,
+            ),
+            (Event::Text(CowStr::Borrowed("|alias-only")), 2..13),
+            (Event::End(TagEnd::Link), 0..15),
+            (Event::End(TagEnd::Paragraph), 0..15),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_escaped_pipe_splits_alias() {
+        // An escaped pipe still splits, and the escape backslash is not part
+        // of the link: `[[a\|b]]` → link `a`, display `b`
+        // [probe: probes/zzprobe-links.md L09].
+        let input = "[[a\\|b]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..8),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: true,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("a"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("a"),
+                        fragment: None,
+                    }),
+                }),
+                0..8,
+            ),
+            (Event::Text(CowStr::Borrowed("b")), 5..6),
+            (Event::End(TagEnd::Link), 0..8),
+            (Event::End(TagEnd::Paragraph), 0..8),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_alias_splits_at_first_pipe() {
+        // Split at the FIRST pipe; later pipes stay in the display text:
+        // `[[a|b|c]]` → link `a`, display `b|c`
+        // [probe: probes/zzprobe-links.md L08].
+        let input = "[[a|b|c]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..9),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: true,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("a"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("a"),
+                        fragment: None,
+                    }),
+                }),
+                0..9,
+            ),
+            (Event::Text(CowStr::Borrowed("b|c")), 4..7),
+            (Event::End(TagEnd::Link), 0..9),
+            (Event::End(TagEnd::Paragraph), 0..9),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_embed_bang_binding() {
+        // `!`-binding rules [probe: probes/zzprobe-links.md L10–L14]:
+        // the `!` binds through adjacent text, an escape or a space defeats
+        // it, a doubled `!` leaves the first literal.
+        let opts = Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_EMBEDS;
+        let link = |embed: bool| Tag::Link {
+            link_type: LinkType::WikiLink {
+                has_pothole: false,
+                embed,
+            },
+            dest_url: CowStr::Borrowed("x"),
+            title: CowStr::Borrowed(""),
+            id: CowStr::Borrowed(""),
+            wikilink: None,
+        };
+
+        // a![[x]] → embed; the `a` stays literal text [probe: L11]
+        let events = offset_events("a![[x]]", opts);
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..7),
+            (Event::Text(CowStr::Borrowed("a")), 0..1),
+            (Event::Start(link(true)), 1..7),
+            (Event::Text(CowStr::Borrowed("x")), 4..5),
+            (Event::End(TagEnd::Link), 1..7),
+            (Event::End(TagEnd::Paragraph), 0..7),
+        ];
+        assert_eq!(&events, &expected, "a![[x]]");
+
+        // \![[x]] → escape defeats the embed; literal `!` + plain link
+        // [probe: L12]
+        let events = offset_events("\\![[x]]", opts);
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..7),
+            (Event::Text(CowStr::Borrowed("!")), 1..2),
+            (Event::Start(link(false)), 2..7),
+            (Event::Text(CowStr::Borrowed("x")), 4..5),
+            (Event::End(TagEnd::Link), 2..7),
+            (Event::End(TagEnd::Paragraph), 0..7),
+        ];
+        assert_eq!(&events, &expected, "\\![[x]]");
+
+        // ! [[x]] → space breaks the binding; plain link [probe: L13]
+        let events = offset_events("! [[x]]", opts);
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..7),
+            (Event::Text(CowStr::Borrowed("! ")), 0..2),
+            (Event::Start(link(false)), 2..7),
+            (Event::Text(CowStr::Borrowed("x")), 4..5),
+            (Event::End(TagEnd::Link), 2..7),
+            (Event::End(TagEnd::Paragraph), 0..7),
+        ];
+        assert_eq!(&events, &expected, "! [[x]]");
+
+        // !![[x]] → embed; the first `!` stays literal [probe: L14]
+        let events = offset_events("!![[x]]", opts);
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..7),
+            (Event::Text(CowStr::Borrowed("!")), 0..1),
+            (Event::Start(link(true)), 1..7),
+            (Event::Text(CowStr::Borrowed("x")), 4..5),
+            (Event::End(TagEnd::Link), 1..7),
+            (Event::End(TagEnd::Paragraph), 0..7),
+        ];
+        assert_eq!(&events, &expected, "!![[x]]");
+
+        // ![[]] → no node at all [probe: probes/zzprobe-oq.md OQ8]
+        let events = offset_events("![[]]", opts);
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..5),
+            (Event::Text(CowStr::Borrowed("![")), 0..2),
+            (Event::Text(CowStr::Borrowed("[")), 2..3),
+            (Event::Text(CowStr::Borrowed("]")), 3..4),
+            (Event::Text(CowStr::Borrowed("]")), 4..5),
+            (Event::End(TagEnd::Paragraph), 0..5),
+        ];
+        assert_eq!(&events, &expected, "![[]]");
+    }
+
+    #[test]
+    fn obsidian_wikilink_crlf_parity() {
+        // CRLF law: `\r\n` is a line end wherever `\n` is — a CRLF document
+        // tokenizes identically to its LF twin (spans shift by the `\r`s)
+        // [probe: results/obsidian-dialect-conformance.md LAW-0,
+        // probes/zzprobe-crlf-fm.md].
+        let opts = Options::ENABLE_WIKILINKS
+            | Options::ENABLE_OBSIDIAN_EMBEDS
+            | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS;
+
+        let events = offset_events("[[a|b]]\r\nnext", opts);
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..13),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: true,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("a"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("a"),
+                        fragment: None,
+                    }),
+                }),
+                0..7,
+            ),
+            (Event::Text(CowStr::Borrowed("b")), 4..5),
+            (Event::End(TagEnd::Link), 0..7),
+            (Event::SoftBreak, 7..9),
+            (Event::Text(CowStr::Borrowed("next")), 9..13),
+            (Event::End(TagEnd::Paragraph), 0..13),
+        ];
+        assert_eq!(&events, &expected, "[[a|b]] with CRLF tail");
+
+        let events = offset_events("x\r\n![[y]]\r\n", opts);
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..11),
+            (Event::Text(CowStr::Borrowed("x")), 0..1),
+            (Event::SoftBreak, 1..3),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: false,
+                        embed: true,
+                    },
+                    dest_url: CowStr::Borrowed("y"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("y"),
+                        fragment: None,
+                    }),
+                }),
+                3..9,
+            ),
+            (Event::Text(CowStr::Borrowed("y")), 6..7),
+            (Event::End(TagEnd::Link), 3..9),
+            (Event::End(TagEnd::Paragraph), 0..11),
+        ];
+        assert_eq!(&events, &expected, "embed after CRLF line end");
+
+        // A wikilink body spanning a line break gets the same treatment in
+        // LF and CRLF form (upstream tokenizes both; only the raw bytes of
+        // the line ending differ).
+        let lf: Vec<_> = Parser::new_ext("[[a\nb]]", opts)
+            .filter_map(|event| match event {
+                Event::Start(Tag::Link { dest_url, .. }) => Some(dest_url.to_string()),
+                _ => None,
+            })
+            .collect();
+        let crlf: Vec<_> = Parser::new_ext("[[a\r\nb]]", opts)
+            .filter_map(|event| match event {
+                Event::Start(Tag::Link { dest_url, .. }) => Some(dest_url.to_string()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(lf, ["a\nb"]);
+        assert_eq!(crlf, ["a\r\nb"]);
     }
 
     #[test]

@@ -958,7 +958,11 @@ bitflags::bitflags! {
         /// Obsidian-style wikilink fragment semantics: `[[target#Heading]]` and
         /// `[[target#^block]]` targets are split into structured fields, populated
         /// in the `wikilink` field of [`Tag::Link`] / [`Tag::Image`] as
-        /// [`WikiLinkTarget`]. Requires [`Options::ENABLE_WIKILINKS`].
+        /// [`WikiLinkTarget`]. Also applies Obsidian's alias-split dialect:
+        /// an escaped `\|` still splits (the backslash is not part of the
+        /// target), and an empty path before the first pipe disables the
+        /// split entirely, so `[[|alias-only]]` tokenizes with the raw body
+        /// as its target. Requires [`Options::ENABLE_WIKILINKS`].
         const ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS = 1 << 21;
     }
 }
