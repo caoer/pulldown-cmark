@@ -11,7 +11,18 @@
 //!   (probe ^a02); a CR that is part of a CRLF line ending is NOT trailing
 //!   whitespace;
 //! - table-cell tail anchors fire — the inline tokenizer runs per cell on
-//!   trimmed cell text (probe ^a15).
+//!   trimmed cell text (probe ^a15);
+//! - multi-line list items bind continuation-tail anchors at ITEM level
+//!   (probes ^v01/^v02/^v05/^v06, `probes/zzprobe-v3-followup.md`); the
+//!   interior rule still applies within the item — an anchor on the item's
+//!   first line with a lazy continuation following does not fire (probe
+//!   ^v03);
+//! - callout TITLE-line tail anchors fire even with body lines following —
+//!   the title is its own inline unit (spec §2.3 [source]; probes
+//!   ^v04/^w01/^w03, `probes/zzprobe-v3b-followup.md`, conformance spec
+//!   §1.3 erratum) — and both a title and a body anchor are EMITTED (probe
+//!   ^w02a/^w02b: the last-writer-wins overwrite is cache/resolution-side,
+//!   not parser-side); everywhere else the interior rule applies uniformly.
 //!
 //! Every positive test asserts both the event payload (id without the caret)
 //! and the byte span: slicing the source by the reported span must reproduce
@@ -254,6 +265,197 @@ fn anchor_at_last_table_cell_without_closing_pipe() {
     let (id, span) = &found[0];
     assert_eq!(id, "cell-x");
     assert_eq!(&src[span.clone()], "^cell-x");
+}
+
+// --- multi-line list-item law (probes ^v01–^v06, zzprobe-v3-followup.md) ---
+
+/// Asserts exactly one anchor (id + span slice-back) under explicit options.
+fn assert_single_anchor_opts(src: &str, id: &str, opts: Options) {
+    let found = anchors_opts(src, opts);
+    assert_eq!(found.len(), 1, "expected one anchor in {:?}, got {:?}", src, found);
+    let (got_id, span) = &found[0];
+    assert_eq!(got_id, id, "wrong id in {:?}", src);
+    assert_eq!(
+        &src[span.clone()],
+        format!("^{}", id),
+        "span {:?} does not slice back to the anchor in {:?}",
+        span,
+        src
+    );
+}
+
+const TASK_OPTS: Options = Options::ENABLE_OBSIDIAN_BLOCK_ANCHORS.union(Options::ENABLE_TASKLISTS);
+
+#[test]
+fn multiline_item_lazy_continuation_tail_fires() {
+    // probe ^v01: lazy (unindented) continuation of a task item — the
+    // continuation-line tail anchor fires, bound at ITEM level (the anchor
+    // event sits inside the Item, no Paragraph wrapper in a tight list)
+    let src = "- [ ] task line one\ncontinuation tail ^v01\n";
+    assert_single_anchor_opts(src, "v01", TASK_OPTS);
+    let events: Vec<_> = Parser::new_ext(src, TASK_OPTS).into_offset_iter().collect();
+    let expected = [
+        (Event::Start(Tag::List(None)), 0..43),
+        (Event::Start(Tag::Item), 0..43),
+        (Event::TaskListMarker(false), 2..5),
+        (Event::Text(CowStr::Borrowed("task line one")), 6..19),
+        (Event::SoftBreak, 19..20),
+        (Event::Text(CowStr::Borrowed("continuation tail ")), 20..38),
+        (Event::BlockAnchor(CowStr::Borrowed("v01")), 38..42),
+        (Event::End(TagEnd::Item), 0..43),
+        (Event::End(TagEnd::List(false)), 0..43),
+    ];
+    assert_eq!(&events, &expected);
+    assert_eq!(&src[38..42], "^v01");
+}
+
+#[test]
+fn multiline_item_indented_continuation_tail_fires() {
+    // probe ^v02: indented continuation
+    assert_single_anchor_opts(
+        "- [ ] task line two\n  indented continuation ^v02\n",
+        "v02",
+        TASK_OPTS,
+    );
+    // plain (non-task) bullet, same law
+    assert_single_anchor("- item one\n  cont ^plain\n", "plain");
+}
+
+#[test]
+fn no_anchor_on_item_first_line_with_continuation() {
+    // probe ^v03: the interior rule applies WITHIN the item — an anchor on
+    // the item's first line with a lazy continuation following does not
+    // fire; it survives as literal text
+    let src = "- [ ] task line three ^v03\ncontinuation after the anchor\n";
+    assert_eq!(anchors_opts(src, TASK_OPTS), vec![]);
+    let events: Vec<_> = Parser::new_ext(src, TASK_OPTS).collect();
+    assert!(
+        events.contains(&Event::Text(CowStr::Borrowed("^v03"))),
+        "demoted anchor must stay literal text, got {:?}",
+        events
+    );
+}
+
+#[test]
+fn midlist_multiline_item_continuation_tail_fires() {
+    // probe ^v05: multi-line item in the middle of a list
+    let src = "- item a\n- [ ] task b\n  cont b ^v05\n- item c\n";
+    assert_single_anchor_opts(src, "v05", TASK_OPTS);
+}
+
+#[test]
+fn nested_child_item_continuation_tail_fires() {
+    // probe ^v06: nested child item, multi-line, anchor at the child's
+    // continuation tail
+    let src = "- parent item\n\t- [ ] child task\n\t  child cont ^v06\n";
+    assert_single_anchor_opts(src, "v06", TASK_OPTS);
+}
+
+#[test]
+fn single_line_item_tail_unchanged() {
+    // probes ^a12/^a13: single-line items keep firing (task-list variant)
+    assert_single_anchor_opts("- [ ] task item ^tli\n", "tli", TASK_OPTS);
+}
+
+#[test]
+fn crlf_multiline_item_continuation_tail_fires() {
+    // CRLF variant of a continuation tail (LAW-0: CRLF is a line ending)
+    assert_single_anchor_opts(
+        "- [ ] task one\r\ncont tail ^crlf-li\r\n",
+        "crlf-li",
+        TASK_OPTS,
+    );
+    // interior law unchanged under CRLF
+    assert_eq!(
+        anchors_opts("- [ ] task ^crlf-no\r\ncontinuation\r\n", TASK_OPTS),
+        vec![]
+    );
+}
+
+// --- callout title-line pin (probes ^v04/^w01–^w03, spec §1.3 erratum) -----
+
+const CALLOUT_OPTS: Options =
+    Options::ENABLE_OBSIDIAN_BLOCK_ANCHORS.union(Options::ENABLE_OBSIDIAN_CALLOUTS);
+
+#[test]
+fn callout_title_line_anchor_fires_title_only() {
+    // probe ^v04: `> [!warn] Title with words ^v04`, no body
+    assert_single_anchor_opts("> [!warn] Title with words ^v04\n", "v04", CALLOUT_OPTS);
+}
+
+#[test]
+fn callout_title_line_anchor_survives_body_line() {
+    // probe ^w01: a plain body line after the title does NOT demote the
+    // title-line tail anchor — the body line arrives through the `>` marker
+    // (spec §1.3 erratum: the earlier no-fire observation was a last-writer
+    // overwrite artifact, resolution-side, not parser-side)
+    let src = "> [!warn] Title anchored ^w01\n> plain body line, no anchor\n";
+    assert_single_anchor_opts(src, "w01", CALLOUT_OPTS);
+}
+
+#[test]
+fn callout_title_and_body_anchors_both_emitted() {
+    // probe ^w02a/^w02b: BOTH anchors are emitted parser-side, in document
+    // order; the one-id-per-section last-writer overwrite is the cache
+    // builder's job downstream, never the parser's
+    let src = "> [!warn] Title anchored ^w02a\n> body anchored ^w02b\n";
+    let found = anchors_opts(src, CALLOUT_OPTS);
+    assert_eq!(found.len(), 2, "expected both anchors, got {:?}", found);
+    assert_eq!(found[0].0, "w02a");
+    assert_eq!(&src[found[0].1.clone()], "^w02a");
+    assert_eq!(found[1].0, "w02b");
+    assert_eq!(&src[found[1].1.clone()], "^w02b");
+}
+
+#[test]
+fn folded_callout_title_line_anchor_fires() {
+    // probe ^w03: fold marker does not interfere with the title-line anchor
+    assert_single_anchor_opts("> [!note]- Folded title ^w03\n> body here\n", "w03", CALLOUT_OPTS);
+}
+
+// --- interior law outside the title exemption (mechanism pins) -------------
+
+#[test]
+fn plain_quote_interior_line_demotes() {
+    // NOT probe-covered: an interior line tail of a multi-line paragraph
+    // inside a PLAIN (non-callout) blockquote. The title exemption is
+    // callout-title-specific; everywhere else the interior law (probe ^a07)
+    // applies uniformly. Locks current behavior; flagged for a GT-v3 probe.
+    assert_eq!(anchors("> quote line ^q1\n> quote line two\n"), vec![]);
+}
+
+#[test]
+fn callout_body_interior_line_demotes() {
+    // the exemption is the TITLE line only: an interior body-paragraph line
+    // tail inside a callout still demotes (interior law, probe ^a07; the
+    // probed body-tail fires oq14b/c were paragraph-FINAL tails)
+    let src = "> [!warn] Title\n> body line ^b\n> more body\n";
+    assert_eq!(anchors_opts(src, CALLOUT_OPTS), vec![]);
+}
+
+#[test]
+fn lazy_line_after_quote_still_demotes() {
+    // a LAZY continuation (no `>` marker) of a quote paragraph demotes the
+    // previous line's tail anchor (interior law, probes ^a07/^v03)
+    assert_eq!(anchors("> quote line ^q2\nlazy continuation\n"), vec![]);
+}
+
+#[test]
+fn kitchen_sink_nested_task_no_fire() {
+    // probe zzprobe-v3d: ^nested-task (task-line tail of a lazily-continued
+    // item inside a nested callout) is a TRUE NO-FIRE — the lazy tail line
+    // joins the item's paragraph, making the task-line anchor interior
+    // (^v03 law); the overwrite explanation was excluded by a discriminator
+    // probe. The continuation-tail anchor ^in-inner FIRES (paragraph tail
+    // inside the nested callout). The frozen gt-v2 kitchen-sink ground
+    // truth expects ^nested-task to fire — that node is a confirmed
+    // miscode (GT-v3 item), not dialect truth.
+    let src = "> > [!inner]+ nested open\n> > - [ ] nested task ^nested-task\n> > inner tail line ^in-inner\n";
+    let opts = TASK_OPTS | Options::ENABLE_OBSIDIAN_CALLOUTS;
+    let found = anchors_opts(src, opts);
+    assert_eq!(found.len(), 1, "expected only ^in-inner, got {:?}", found);
+    assert_eq!(found[0].0, "in-inner");
+    assert_eq!(&src[found[0].1.clone()], "^in-inner");
 }
 
 // ---------------------------------------------------------------------------

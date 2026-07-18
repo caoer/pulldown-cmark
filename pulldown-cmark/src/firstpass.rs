@@ -738,6 +738,7 @@ impl<'a, 'b> FirstPass<'a, 'b> {
         let bytes = self.text.as_bytes();
         let mut ix = start_ix;
         loop {
+            let line_is_para_first = ix == start_ix;
             let scan_mode = if self.options.contains(Options::ENABLE_TABLES) && ix == start_ix {
                 TableParseMode::Scan
             } else {
@@ -842,11 +843,28 @@ impl<'a, 'b> FirstPass<'a, 'b> {
 
             // the paragraph continues, so the previous line's tail anchor was
             // interior — Obsidian binds anchors to the paragraph's last line
-            // only (probe ^a07)
+            // only (probe ^a07). One exception: a callout TITLE-line tail
+            // anchor survives its body lines, because the title is its own
+            // inline unit in Obsidian (remainder of the head line, rendered
+            // separately from the body — spec §2.3 [source]); probes ^w01/
+            // ^w03 + the §1.3 erratum (the earlier no-fire observation was a
+            // resolution-side last-writer overwrite, not a parse rule). The
+            // title line is the paragraph's first line when the paragraph
+            // starts on a callout quote's head line.
             if let Some(anchor_ix) = line_anchor {
-                self.tree[anchor_ix].item.body = ItemBody::Text {
-                    backslash_escaped: false,
-                };
+                let callout_title_line = line_is_para_first
+                    && self.tree.walk_spine().rev().nth(1).is_some_and(|&quote_ix| {
+                        matches!(
+                            self.tree[quote_ix].item.body,
+                            ItemBody::BlockQuote(_, Some(_))
+                        ) && !bytes[self.tree[quote_ix].item.start..start_ix]
+                            .contains(&b'\n')
+                    });
+                if !callout_title_line {
+                    self.tree[anchor_ix].item.body = ItemBody::Text {
+                        backslash_escaped: false,
+                    };
+                }
             }
 
             ix = next_ix + line_start.bytes_scanned();
