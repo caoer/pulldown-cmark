@@ -27,8 +27,8 @@ use memchr::{memchr, memchr2};
 
 pub(crate) use crate::puncttable::{is_ascii_punctuation, is_punctuation};
 use crate::{
-    entities, parse::HtmlScanGuard, strings::CowStr, Alignment, BlockQuoteKind, HeadingLevel,
-    LinkType,
+    entities, parse::HtmlScanGuard, strings::CowStr, Alignment, BlockQuoteKind, CalloutFold,
+    HeadingLevel, LinkType,
 };
 
 // sorted for binary search
@@ -96,6 +96,41 @@ const HTML_TAGS: [&str; 62] = [
     "track",
     "ul",
 ];
+
+/// Result of scanning an Obsidian callout header (`[!type]`, `[!type]+`,
+/// `[!type]-`) directly after a blockquote marker.
+///
+/// `type_start..type_end` are byte offsets into the [`LineStart`]'s buffer
+/// covering the callout type as written (without `[!` / `]`).
+pub(crate) struct ObsidianCalloutScan {
+    pub type_start: usize,
+    pub type_end: usize,
+    pub fold: Option<CalloutFold>,
+    /// The rest of the head line was blank and has been consumed
+    /// (including the newline), mirroring the GFM blockquote tag.
+    pub consumed_to_eol: bool,
+    /// Whitespace was skipped between the blockquote marker and `[!`;
+    /// the stricter GFM scanner would not have matched here.
+    pub leading_ws: bool,
+}
+
+/// Case-insensitive GFM alert kind for a callout type as written,
+/// e.g. `NOTE` or `note` => [`BlockQuoteKind::Note`].
+pub(crate) fn blockquote_kind_from_tag(tag: &[u8]) -> Option<BlockQuoteKind> {
+    if tag.eq_ignore_ascii_case(b"note") {
+        Some(BlockQuoteKind::Note)
+    } else if tag.eq_ignore_ascii_case(b"tip") {
+        Some(BlockQuoteKind::Tip)
+    } else if tag.eq_ignore_ascii_case(b"important") {
+        Some(BlockQuoteKind::Important)
+    } else if tag.eq_ignore_ascii_case(b"warning") {
+        Some(BlockQuoteKind::Warning)
+    } else if tag.eq_ignore_ascii_case(b"caution") {
+        Some(BlockQuoteKind::Caution)
+    } else {
+        None
+    }
+}
 
 /// Analysis of the beginning of a line, including indentation and container
 /// markers.
@@ -258,6 +293,71 @@ impl<'a> LineStart<'a> {
             self.ix = saved_ix;
         }
         tag
+    }
+
+    /// Scans an Obsidian callout header after a blockquote marker:
+    /// `[!type]`, `[!type]+`, `[!type]-`, with an arbitrary type in
+    /// `[A-Za-z0-9_-]+`. Unlike the GFM variant above, whitespace may
+    /// separate the marker from `[!`, and text (the callout title) may
+    /// follow the tag on the same line.
+    ///
+    /// On a match, consumes through the tag; if the rest of the line is
+    /// blank it is consumed too (mirroring the GFM tag), otherwise a
+    /// single separating space is consumed and the title is left as
+    /// inline content. On failure the position is restored.
+    pub(crate) fn scan_obsidian_callout_tag(&mut self) -> Option<ObsidianCalloutScan> {
+        let saved_ix = self.ix;
+        let ws_start = self.ix;
+        while self
+            .bytes
+            .get(self.ix)
+            .is_some_and(|&c| c == b' ' || c == b'\t')
+        {
+            self.ix += 1;
+        }
+        let leading_ws = self.ix > ws_start;
+        if !(self.scan_ch(b'[') && self.scan_ch(b'!')) {
+            self.ix = saved_ix;
+            return None;
+        }
+        let type_start = self.ix;
+        while self
+            .bytes
+            .get(self.ix)
+            .is_some_and(|&c| c.is_ascii_alphanumeric() || c == b'_' || c == b'-')
+        {
+            self.ix += 1;
+        }
+        let type_end = self.ix;
+        if type_end == type_start || !self.scan_ch(b']') {
+            self.ix = saved_ix;
+            return None;
+        }
+        let fold = match self.bytes.get(self.ix) {
+            Some(b'+') => {
+                self.ix += 1;
+                Some(CalloutFold::Open)
+            }
+            Some(b'-') => {
+                self.ix += 1;
+                Some(CalloutFold::Folded)
+            }
+            _ => None,
+        };
+        let consumed_to_eol = if let Some(nl) = scan_blank_line(&self.bytes[self.ix..]) {
+            self.ix += nl;
+            true
+        } else {
+            let _ = self.scan_ch(b' ');
+            false
+        };
+        Some(ObsidianCalloutScan {
+            type_start,
+            type_end,
+            fold,
+            consumed_to_eol,
+            leading_ws,
+        })
     }
 
     pub(crate) fn scan_blockquote_marker(&mut self) -> bool {
