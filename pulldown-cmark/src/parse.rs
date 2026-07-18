@@ -41,7 +41,7 @@ use crate::{
     strings::CowStr,
     tree::{Tree, TreeIndex},
     Alignment, BlockQuoteKind, CodeBlockKind, ContainerKind, Event, HeadingLevel, LinkType,
-    MetadataBlockKind, Options, Tag, TagEnd,
+    MetadataBlockKind, Options, Tag, TagEnd, WikiLinkFragment, WikiLinkTarget,
 };
 
 // Allowing arbitrary depth nested parentheses inside link destinations
@@ -467,7 +467,7 @@ impl<'input> ParserInner<'input> {
                         });
                         let link_ix =
                             self.allocs
-                                .allocate_link(link_type, uri, "".into(), "".into());
+                                .allocate_link(link_type, uri, "".into(), "".into(), None);
                         self.tree[cur_ix].item.body = ItemBody::Link(link_ix);
                         self.tree[cur_ix].item.end = ix;
                         self.tree[cur_ix].next = node;
@@ -724,9 +724,13 @@ impl<'input> ParserInner<'input> {
                             }
                             cur = Some(tos.node);
                             cur_ix = tos.node;
-                            let link_ix =
-                                self.allocs
-                                    .allocate_link(LinkType::Inline, url, title, "".into());
+                            let link_ix = self.allocs.allocate_link(
+                                LinkType::Inline,
+                                url,
+                                title,
+                                "".into(),
+                                None,
+                            );
                             self.tree[cur_ix].item.body = if tos.ty == LinkStackTy::Image {
                                 ItemBody::Image(link_ix)
                             } else {
@@ -869,8 +873,9 @@ impl<'input> ParserInner<'input> {
                                         callbacks,
                                     )
                                 {
-                                    let link_ix =
-                                        self.allocs.allocate_link(def_link_type, url, title, id);
+                                    let link_ix = self
+                                        .allocs
+                                        .allocate_link(def_link_type, url, title, id, None);
                                     self.tree[tos.node].item.body = if tos.ty == LinkStackTy::Image
                                     {
                                         ItemBody::Image(link_ix)
@@ -1006,11 +1011,20 @@ impl<'input> ParserInner<'input> {
             if let Some((has_pothole, body_node, wikiname)) = wikilink {
                 let embed = tos.ty == LinkStackTy::Image
                     && self.options.contains(Options::ENABLE_OBSIDIAN_EMBEDS);
+                let wikilink_target = if self
+                    .options
+                    .contains(Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS)
+                {
+                    Some(split_wikilink_target(wikiname))
+                } else {
+                    None
+                };
                 let link_ix = self.allocs.allocate_link(
                     LinkType::WikiLink { has_pothole, embed },
                     wikiname.into(),
                     "".into(),
                     "".into(),
+                    wikilink_target,
                 );
                 if let Some(prev_ix) = prev {
                     self.tree[prev_ix].next = None;
@@ -1805,6 +1819,30 @@ fn scan_nodes_to_ix(
     node
 }
 
+/// Splits a wikilink target at the first `#` into its structured form:
+/// `note` / `note#Heading` / `note#^block`. Nested heading sub-paths like
+/// `note#H1#H2` stay one `Heading` string. Empty fragments (`[[note#]]`,
+/// `[[#]]`, `[[note#^]]`) degrade to empty strings rather than being
+/// rejected — the parser already accepted the wikilink.
+fn split_wikilink_target(wikiname: &str) -> WikiLinkTarget<'_> {
+    match wikiname.split_once('#') {
+        None => WikiLinkTarget {
+            target: wikiname.into(),
+            fragment: None,
+        },
+        Some((target, frag)) => {
+            let fragment = match frag.strip_prefix('^') {
+                Some(block) => WikiLinkFragment::BlockAnchor(block.into()),
+                None => WikiLinkFragment::Heading(frag.into()),
+            };
+            WikiLinkTarget {
+                target: target.into(),
+                fragment: Some(fragment),
+            }
+        }
+    }
+}
+
 /// Scans an inline link label, which cannot be interrupted.
 /// Returns number of bytes (including brackets) and label on success.
 fn scan_link_label<'text>(
@@ -2055,7 +2093,13 @@ pub(crate) struct HeadingIndex(NonZeroUsize);
 pub(crate) struct Allocations<'a> {
     pub refdefs: RefDefs<'a>,
     pub footdefs: FootnoteDefs<'a>,
-    links: Vec<(LinkType, CowStr<'a>, CowStr<'a>, CowStr<'a>)>,
+    links: Vec<(
+        LinkType,
+        CowStr<'a>,
+        CowStr<'a>,
+        CowStr<'a>,
+        Option<WikiLinkTarget<'a>>,
+    )>,
     cows: Vec<CowStr<'a>>,
     alignments: Vec<Vec<Alignment>>,
     headings: Vec<HeadingAttributes<'a>>,
@@ -2130,9 +2174,10 @@ impl<'a> Allocations<'a> {
         url: CowStr<'a>,
         title: CowStr<'a>,
         id: CowStr<'a>,
+        wikilink: Option<WikiLinkTarget<'a>>,
     ) -> LinkIndex {
         let ix = self.links.len();
-        self.links.push((ty, url, title, id));
+        self.links.push((ty, url, title, id, wikilink));
         LinkIndex(ix)
     }
 
@@ -2155,8 +2200,23 @@ impl<'a> Allocations<'a> {
         core::mem::replace(&mut self.cows[ix.0], "".into())
     }
 
-    pub fn take_link(&mut self, ix: LinkIndex) -> (LinkType, CowStr<'a>, CowStr<'a>, CowStr<'a>) {
-        let default_link = (LinkType::ShortcutUnknown, "".into(), "".into(), "".into());
+    pub fn take_link(
+        &mut self,
+        ix: LinkIndex,
+    ) -> (
+        LinkType,
+        CowStr<'a>,
+        CowStr<'a>,
+        CowStr<'a>,
+        Option<WikiLinkTarget<'a>>,
+    ) {
+        let default_link = (
+            LinkType::ShortcutUnknown,
+            "".into(),
+            "".into(),
+            "".into(),
+            None,
+        );
         core::mem::replace(&mut self.links[ix.0], default_link)
     }
 
@@ -2174,7 +2234,13 @@ impl<'a> Index<CowIndex> for Allocations<'a> {
 }
 
 impl<'a> Index<LinkIndex> for Allocations<'a> {
-    type Output = (LinkType, CowStr<'a>, CowStr<'a>, CowStr<'a>);
+    type Output = (
+        LinkType,
+        CowStr<'a>,
+        CowStr<'a>,
+        CowStr<'a>,
+        Option<WikiLinkTarget<'a>>,
+    );
 
     fn index(&self, ix: LinkIndex) -> &Self::Output {
         self.links.index(ix.0)
@@ -2412,23 +2478,23 @@ fn item_to_event<'a>(item: Item, text: &'a str, allocs: &mut Allocations<'a>) ->
         ItemBody::Strikethrough => Tag::Strikethrough,
         ItemBody::Highlight => Tag::Highlight,
         ItemBody::Link(link_ix) => {
-            let (link_type, dest_url, title, id) = allocs.take_link(link_ix);
+            let (link_type, dest_url, title, id, wikilink) = allocs.take_link(link_ix);
             Tag::Link {
                 link_type,
                 dest_url,
                 title,
                 id,
-                wikilink: None,
+                wikilink,
             }
         }
         ItemBody::Image(link_ix) => {
-            let (link_type, dest_url, title, id) = allocs.take_link(link_ix);
+            let (link_type, dest_url, title, id, wikilink) = allocs.take_link(link_ix);
             Tag::Image {
                 link_type,
                 dest_url,
                 title,
                 id,
-                wikilink: None,
+                wikilink,
             }
         }
         ItemBody::Heading(level, Some(heading_ix)) => {
@@ -3116,10 +3182,268 @@ text
     }
 
     #[test]
+    fn obsidian_fragment_heading() {
+        let input = "[[note#Head]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..13),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: false,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("note#Head"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("note"),
+                        fragment: Some(WikiLinkFragment::Heading(CowStr::Borrowed("Head"))),
+                    }),
+                }),
+                0..13,
+            ),
+            (Event::Text(CowStr::Borrowed("note#Head")), 2..11),
+            (Event::End(TagEnd::Link), 0..13),
+            (Event::End(TagEnd::Paragraph), 0..13),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_fragment_block_anchor() {
+        let input = "[[note#^blk]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..13),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: false,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("note#^blk"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("note"),
+                        fragment: Some(WikiLinkFragment::BlockAnchor(CowStr::Borrowed("blk"))),
+                    }),
+                }),
+                0..13,
+            ),
+            (Event::Text(CowStr::Borrowed("note#^blk")), 2..11),
+            (Event::End(TagEnd::Link), 0..13),
+            (Event::End(TagEnd::Paragraph), 0..13),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_fragment_with_alias_keeps_pothole() {
+        let input = "[[t#F|alias]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..13),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: true,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("t#F"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("t"),
+                        fragment: Some(WikiLinkFragment::Heading(CowStr::Borrowed("F"))),
+                    }),
+                }),
+                0..13,
+            ),
+            (Event::Text(CowStr::Borrowed("alias")), 6..11),
+            (Event::End(TagEnd::Link), 0..13),
+            (Event::End(TagEnd::Paragraph), 0..13),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_bare_wikilink_no_fragment() {
+        let input = "[[note]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..8),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: false,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("note"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("note"),
+                        fragment: None,
+                    }),
+                }),
+                0..8,
+            ),
+            (Event::Text(CowStr::Borrowed("note")), 2..6),
+            (Event::End(TagEnd::Link), 0..8),
+            (Event::End(TagEnd::Paragraph), 0..8),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_embed_fragment_alias_combined() {
+        let input = "![[note#Head|alias]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS
+                | Options::ENABLE_OBSIDIAN_EMBEDS
+                | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..20),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: true,
+                        embed: true,
+                    },
+                    dest_url: CowStr::Borrowed("note#Head"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("note"),
+                        fragment: Some(WikiLinkFragment::Heading(CowStr::Borrowed("Head"))),
+                    }),
+                }),
+                0..20,
+            ),
+            (Event::Text(CowStr::Borrowed("alias")), 13..18),
+            (Event::End(TagEnd::Link), 0..20),
+            (Event::End(TagEnd::Paragraph), 0..20),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_fragments_populate_image_without_embeds() {
+        // Flag independence: with fragments on but embeds off, `![[..]]`
+        // stays an Image and still carries the structured target.
+        let input = "![[note#Head]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..14),
+            (
+                Event::Start(Tag::Image {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: false,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("note#Head"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: Some(WikiLinkTarget {
+                        target: CowStr::Borrowed("note"),
+                        fragment: Some(WikiLinkFragment::Heading(CowStr::Borrowed("Head"))),
+                    }),
+                }),
+                0..14,
+            ),
+            (Event::Text(CowStr::Borrowed("note#Head")), 3..12),
+            (Event::End(TagEnd::Image), 0..14),
+            (Event::End(TagEnd::Paragraph), 0..14),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_malformed_fragments_degrade() {
+        // Fuzz-adjacent inputs: empty targets/fragments split structurally
+        // (empty strings, never a panic), nested `#` stays one heading.
+        let opts = Options::ENABLE_WIKILINKS
+            | Options::ENABLE_OBSIDIAN_EMBEDS
+            | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS;
+        let wikilink_of = |input: &'static str| -> Option<WikiLinkTarget<'static>> {
+            let mut found = None;
+            for event in Parser::new_ext(input, opts) {
+                if let Event::Start(
+                    Tag::Link { wikilink, .. } | Tag::Image { wikilink, .. },
+                ) = event
+                {
+                    found = Some(wikilink);
+                }
+            }
+            found.expect("input should parse as a wikilink")
+        };
+
+        let cases: &[(&'static str, &str, Option<WikiLinkFragment<'_>>)] = &[
+            ("[[#]]", "", Some(WikiLinkFragment::Heading("".into()))),
+            ("[[note#]]", "note", Some(WikiLinkFragment::Heading("".into()))),
+            (
+                "[[note#^]]",
+                "note",
+                Some(WikiLinkFragment::BlockAnchor("".into())),
+            ),
+            ("[[#^]]", "", Some(WikiLinkFragment::BlockAnchor("".into()))),
+            (
+                "[[a#H1#H2]]",
+                "a",
+                Some(WikiLinkFragment::Heading("H1#H2".into())),
+            ),
+            (
+                "![[x#^b|al]]",
+                "x",
+                Some(WikiLinkFragment::BlockAnchor("b".into())),
+            ),
+        ];
+        for (input, target, fragment) in cases {
+            let got = wikilink_of(input).unwrap_or_else(|| {
+                panic!("{input}: wikilink field should be populated");
+            });
+            assert_eq!(&*got.target, *target, "{input}: target");
+            assert_eq!(&got.fragment, fragment, "{input}: fragment");
+        }
+
+        // Degenerate bodies never become wikilinks, and never panic.
+        for input in ["![[]]", "![[|]]", "[[]]", "[[|]]"] {
+            let has_link = Parser::new_ext(input, opts).any(|event| {
+                matches!(
+                    event,
+                    Event::Start(Tag::Link { .. } | Tag::Image { .. })
+                )
+            });
+            assert!(!has_link, "{input}: should degrade to text");
+        }
+    }
+
+    #[test]
     fn obsidian_flags_no_event_blowup() {
         // The upstream adversarial input (issue #1108 family) stays linear
-        // and panic-free with the Obsidian embed flag enabled.
-        let opts = Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_EMBEDS;
+        // and panic-free with all Obsidian wikilink flags enabled.
+        let opts = Options::ENABLE_WIKILINKS
+            | Options::ENABLE_OBSIDIAN_EMBEDS
+            | Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS;
         let one = "[[[[^(\n|]]]]=]]]]]]]]\n".repeat(1);
         let eight = "[[[[^(\n|]]]]=]]]]]]]]\n".repeat(8);
 
