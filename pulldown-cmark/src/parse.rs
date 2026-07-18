@@ -1004,11 +1004,10 @@ impl<'input> ParserInner<'input> {
             };
 
             if let Some((has_pothole, body_node, wikiname)) = wikilink {
+                let embed = tos.ty == LinkStackTy::Image
+                    && self.options.contains(Options::ENABLE_OBSIDIAN_EMBEDS);
                 let link_ix = self.allocs.allocate_link(
-                    LinkType::WikiLink {
-                        has_pothole,
-                        embed: false,
-                    },
+                    LinkType::WikiLink { has_pothole, embed },
                     wikiname.into(),
                     "".into(),
                     "".into(),
@@ -1016,7 +1015,7 @@ impl<'input> ParserInner<'input> {
                 if let Some(prev_ix) = prev {
                     self.tree[prev_ix].next = None;
                 }
-                if tos.ty == LinkStackTy::Image {
+                if tos.ty == LinkStackTy::Image && !embed {
                     self.tree[tos.node].item.body = ItemBody::Image(link_ix);
                 } else {
                     self.tree[tos.node].item.body = ItemBody::Link(link_ix);
@@ -3021,6 +3020,116 @@ text
             "Event count should scale linearly with input length; \
              got {n1} events for 1× and {n8} events for 8× ({}× ratio, expected ≤20×)",
             n8 / n1.max(1)
+        );
+    }
+
+    fn offset_events(input: &str, options: Options) -> Vec<(Event<'_>, core::ops::Range<usize>)> {
+        Parser::new_ext(input, options).into_offset_iter().collect()
+    }
+
+    #[test]
+    fn obsidian_embed_folds_bang() {
+        let input = "![[img.png]]";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_EMBEDS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..12),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: false,
+                        embed: true,
+                    },
+                    dest_url: CowStr::Borrowed("img.png"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: None,
+                }),
+                0..12,
+            ),
+            (Event::Text(CowStr::Borrowed("img.png")), 3..10),
+            (Event::End(TagEnd::Link), 0..12),
+            (Event::End(TagEnd::Paragraph), 0..12),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_embed_with_alias() {
+        let input = "a ![[img.png|alt]] b";
+        let events = offset_events(
+            input,
+            Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_EMBEDS,
+        );
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..20),
+            (Event::Text(CowStr::Borrowed("a ")), 0..2),
+            (
+                Event::Start(Tag::Link {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: true,
+                        embed: true,
+                    },
+                    dest_url: CowStr::Borrowed("img.png"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: None,
+                }),
+                2..18,
+            ),
+            (Event::Text(CowStr::Borrowed("alt")), 13..16),
+            (Event::End(TagEnd::Link), 2..18),
+            (Event::Text(CowStr::Borrowed(" b")), 18..20),
+            (Event::End(TagEnd::Paragraph), 0..20),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_embed_flag_off_is_upstream_composite() {
+        // Without ENABLE_OBSIDIAN_EMBEDS, `![[..]]` stays the upstream
+        // Image + WikiLink composite, byte-identical (span still covers `!`).
+        let input = "![[img.png]]";
+        let events = offset_events(input, Options::ENABLE_WIKILINKS);
+        let expected = [
+            (Event::Start(Tag::Paragraph), 0..12),
+            (
+                Event::Start(Tag::Image {
+                    link_type: LinkType::WikiLink {
+                        has_pothole: false,
+                        embed: false,
+                    },
+                    dest_url: CowStr::Borrowed("img.png"),
+                    title: CowStr::Borrowed(""),
+                    id: CowStr::Borrowed(""),
+                    wikilink: None,
+                }),
+                0..12,
+            ),
+            (Event::Text(CowStr::Borrowed("img.png")), 3..10),
+            (Event::End(TagEnd::Image), 0..12),
+            (Event::End(TagEnd::Paragraph), 0..12),
+        ];
+        assert_eq!(&events, &expected);
+    }
+
+    #[test]
+    fn obsidian_flags_no_event_blowup() {
+        // The upstream adversarial input (issue #1108 family) stays linear
+        // and panic-free with the Obsidian embed flag enabled.
+        let opts = Options::ENABLE_WIKILINKS | Options::ENABLE_OBSIDIAN_EMBEDS;
+        let one = "[[[[^(\n|]]]]=]]]]]]]]\n".repeat(1);
+        let eight = "[[[[^(\n|]]]]=]]]]]]]]\n".repeat(8);
+
+        let n1 = Parser::new_ext(&one, opts).count();
+        let n8 = Parser::new_ext(&eight, opts).count();
+
+        assert!(
+            n8 <= n1 * 20,
+            "Event count should scale linearly with input length; \
+             got {n1} events for 1× and {n8} events for 8× under Obsidian flags",
         );
     }
 }
