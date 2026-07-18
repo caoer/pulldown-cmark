@@ -882,6 +882,56 @@ impl<'a, 'b> FirstPass<'a, 'b> {
         Some(ix + n)
     }
 
+    /// Obsidian block anchors (`^id` at the tail of a line): if the pending
+    /// text run ending at `text_end` finishes with an anchor, append the
+    /// preceding text and the anchor item instead of plain text, and return
+    /// `true`.
+    ///
+    /// Reference semantics (parser-bench ground truth): the anchor is `^` plus
+    /// a non-empty run of `[A-Za-z0-9-]`, preceded by the line start or a
+    /// space/tab, and followed only by whitespace up to the line end. The
+    /// whole anchor must lie inside the pending text run — a caret already
+    /// consumed by another construct (escape, superscript delimiter) never
+    /// forms an anchor.
+    fn append_line_tail_anchor(
+        &mut self,
+        line_start: usize,
+        begin_text: usize,
+        text_end: usize,
+        backslash_escaped: bool,
+    ) -> bool {
+        if !self
+            .options
+            .contains(Options::ENABLE_OBSIDIAN_BLOCK_ANCHORS)
+        {
+            return false;
+        }
+        let bytes = self.text.as_bytes();
+        let id_len = scan_rev_while(&bytes[begin_text..text_end], |b| {
+            b.is_ascii_alphanumeric() || b == b'-'
+        });
+        if id_len == 0 {
+            return false;
+        }
+        let id_start = text_end - id_len;
+        // the caret must sit inside the pending text run
+        if id_start <= begin_text || bytes[id_start - 1] != b'^' {
+            return false;
+        }
+        let caret = id_start - 1;
+        // preceded by the line start or a raw space/tab
+        if caret != line_start && !matches!(bytes[caret - 1], b' ' | b'\t') {
+            return false;
+        }
+        self.tree.append_text(begin_text, caret, backslash_escaped);
+        self.tree.append(Item {
+            start: caret,
+            end: text_end,
+            body: ItemBody::ObsidianBlockAnchor,
+        });
+        true
+    }
+
     /// Parse a line of input, appending text and items to tree.
     ///
     /// Returns: index after line and an item representing the break.
@@ -963,9 +1013,17 @@ impl<'a, 'b> FirstPass<'a, 'b> {
 
                     let trailing_whitespace =
                         scan_rev_while(&bytes[..ix], is_ascii_whitespace_no_nl);
+                    let anchored = self.append_line_tail_anchor(
+                        start,
+                        begin_text,
+                        ix - trailing_whitespace,
+                        backslash_escaped,
+                    );
                     if trailing_whitespace >= 2 {
                         i -= trailing_whitespace;
-                        self.tree.append_text(begin_text, i, backslash_escaped);
+                        if !anchored {
+                            self.tree.append_text(begin_text, i, backslash_escaped);
+                        }
                         backslash_escaped = false;
                         return LoopInstruction::BreakAtWith(
                             end_ix,
@@ -977,8 +1035,10 @@ impl<'a, 'b> FirstPass<'a, 'b> {
                         );
                     }
 
-                    self.tree
-                        .append_text(begin_text, ix - trailing_whitespace, backslash_escaped);
+                    if !anchored {
+                        self.tree
+                            .append_text(begin_text, ix - trailing_whitespace, backslash_escaped);
+                    }
                     backslash_escaped = false;
 
                     LoopInstruction::BreakAtWith(
@@ -1326,12 +1386,14 @@ impl<'a, 'b> FirstPass<'a, 'b> {
         if brk.is_none() {
             let trailing_whitespace =
                 scan_rev_while(&bytes[begin_text..final_ix], is_ascii_whitespace_no_nl);
-            // need to close text at eof
-            self.tree.append_text(
-                begin_text,
-                final_ix - trailing_whitespace,
-                backslash_escaped,
-            );
+            let text_end = final_ix - trailing_whitespace;
+            // anchors bind to line tails, not to table-cell tails
+            let anchored = mode != TableParseMode::Active
+                && self.append_line_tail_anchor(start, begin_text, text_end, backslash_escaped);
+            if !anchored {
+                // need to close text at eof
+                self.tree.append_text(begin_text, text_end, backslash_escaped);
+            }
         }
         (final_ix, brk)
     }

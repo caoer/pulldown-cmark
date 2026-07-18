@@ -88,6 +88,11 @@ pub(crate) enum ItemBody {
     Image(LinkIndex),
     FootnoteReference(CowIndex),
     TaskListMarker(bool), // true for checked
+    // `^id` at a line tail; span covers the caret + id, the id is re-sliced
+    // from the source in item_to_event. Appended fully resolved by the first
+    // pass; an occurrence inside an inline code span is detached with the rest
+    // of the span interior by make_code_span.
+    ObsidianBlockAnchor,
 
     // These are also inline items.
     InlineHtml,
@@ -173,6 +178,7 @@ impl ItemBody {
                 | Image(..)
                 | FootnoteReference(..)
                 | TaskListMarker(..)
+                | ObsidianBlockAnchor
                 | InlineHtml
                 | OwnedInlineHtml(..)
                 | SynthesizeText(..)
@@ -2404,6 +2410,9 @@ fn item_to_event<'a>(item: Item, text: &'a str, allocs: &mut Allocations<'a>) ->
             return Event::FootnoteReference(allocs.take_cow(cow_ix))
         }
         ItemBody::TaskListMarker(checked) => return Event::TaskListMarker(checked),
+        ItemBody::ObsidianBlockAnchor => {
+            return Event::BlockAnchor(text[item.start + 1..item.end].into())
+        }
         ItemBody::Rule => return Event::Rule,
         ItemBody::Paragraph => Tag::Paragraph,
         ItemBody::Emphasis => Tag::Emphasis,
