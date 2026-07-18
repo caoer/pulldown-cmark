@@ -1,0 +1,39 @@
+{
+ "file": "adversarial/zzprobe-anchors-c.md",
+ "nodes": [
+  {
+   "info": {
+    "id": "c02"
+   },
+   "kind": "anchor",
+   "span": [
+    68,
+    72
+   ],
+   "text_prefix_16b": "^c02\r\n\nC03 two i"
+  },
+  {
+   "info": {
+    "id": "c03b"
+   },
+   "kind": "anchor",
+   "span": [
+    97,
+    102
+   ],
+   "text_prefix_16b": "^c03b\n\nC04 tab a"
+  },
+  {
+   "info": {
+    "id": "c05"
+   },
+   "kind": "anchor",
+   "span": [
+    149,
+    153
+   ],
+   "text_prefix_16b": "^c05"
+  }
+ ],
+ "schema": "gt-v2"
+}

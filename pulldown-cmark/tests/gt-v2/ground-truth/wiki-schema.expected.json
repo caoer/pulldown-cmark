@@ -1,0 +1,1965 @@
+{
+ "file": "corpus/wiki-schema.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "aliases",
+     "tags",
+     "contract-version",
+     "created",
+     "updated",
+     "lint-ignore"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    176
+   ],
+   "text_prefix_16b": "---\naliases: [wi"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki",
+   "kind": "heading",
+   "span": [
+    178,
+    205
+   ],
+   "text_prefix_16b": "# Wiki Schema \\xe2\\x80"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "abstract"
+   },
+   "kind": "callout",
+   "span": [
+    207,
+    404
+   ],
+   "text_prefix_16b": "> [!ABSTRACT] Wh"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Contract",
+   "kind": "heading",
+   "span": [
+    406,
+    417
+   ],
+   "text_prefix_16b": "## Contract\n\nThi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    465,
+    486
+   ],
+   "text_prefix_16b": "`contract-versio"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    723,
+    750
+   ],
+   "text_prefix_16b": "`references/cont"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    768,
+    779
+   ],
+   "text_prefix_16b": "`md schema`. Thi"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Contract/Canonical-clean requirement",
+   "kind": "heading",
+   "span": [
+    830,
+    861
+   ],
+   "text_prefix_16b": "### Canonical-cl"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    883,
+    923
+   ],
+   "text_prefix_16b": "`md check --rule"
+  },
+  {
+   "info": {
+    "target": "wikilink-canonicalize"
+   },
+   "kind": "wikilink",
+   "span": [
+    1050,
+    1075
+   ],
+   "text_prefix_16b": "[[wikilink-canon"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Architecture",
+   "kind": "heading",
+   "span": [
+    1078,
+    1093
+   ],
+   "text_prefix_16b": "## Architecture\n"
+  },
+  {
+   "kind": "table",
+   "span": [
+    1145,
+    1863
+   ],
+   "text_prefix_16b": "| Layer | Direct"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1242,
+    1250
+   ],
+   "text_prefix_16b": "`inbox/` | Human"
+  },
+  {
+   "info": {
+    "target": "INBOX"
+   },
+   "kind": "wikilink",
+   "span": [
+    1293,
+    1302
+   ],
+   "text_prefix_16b": "[[INBOX]] is the"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1358,
+    1368
+   ],
+   "text_prefix_16b": "`sources/` | LLM"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1452,
+    1481
+   ],
+   "text_prefix_16b": "`domains/<cluste"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1559,
+    1571
+   ],
+   "text_prefix_16b": "`synthesis/` | L"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1650,
+    1660
+   ],
+   "text_prefix_16b": "`effects/` | LLM"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1789,
+    1800
+   ],
+   "text_prefix_16b": "`SCHEMA.md` | Co"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2007,
+    2013
+   ],
+   "text_prefix_16b": "`repo`+`commit` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2014,
+    2022
+   ],
+   "text_prefix_16b": "`commit` / `loca"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2025,
+    2035
+   ],
+   "text_prefix_16b": "`location`+`chec"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2036,
+    2046
+   ],
+   "text_prefix_16b": "`checksum`) or *"
+  },
+  {
+   "info": {
+    "target": "EFFECTS"
+   },
+   "kind": "wikilink",
+   "span": [
+    2206,
+    2217
+   ],
+   "text_prefix_16b": "[[EFFECTS]] owns"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Architecture/Storage normalization",
+   "kind": "heading",
+   "span": [
+    2258,
+    2283
+   ],
+   "text_prefix_16b": "### Storage norm"
+  },
+  {
+   "info": {
+    "target": "home-wiki-assets"
+   },
+   "kind": "wikilink",
+   "span": [
+    2473,
+    2493
+   ],
+   "text_prefix_16b": "[[home-wiki-asse"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2548,
+    2565
+   ],
+   "text_prefix_16b": "`inbox/a/b/c.ext"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2570,
+    2604
+   ],
+   "text_prefix_16b": "`home-wiki-asset"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2670,
+    2675
+   ],
+   "text_prefix_16b": "`.md`. A git rep"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2755,
+    2772
+   ],
+   "text_prefix_16b": "`home-wiki-repos"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2889,
+    2897
+   ],
+   "text_prefix_16b": "`asset:` names t"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2977,
+    3023
+   ],
+   "text_prefix_16b": "`md run '{\"file\""
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3225,
+    3232
+   ],
+   "text_prefix_16b": "`.base`, `.canva"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3234,
+    3243
+   ],
+   "text_prefix_16b": "`.canvas`, `.git"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3245,
+    3255
+   ],
+   "text_prefix_16b": "`.gitkeep`.\n- **"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3496,
+    3505
+   ],
+   "text_prefix_16b": "`assets/` at the"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3569,
+    3579
+   ],
+   "text_prefix_16b": "`foreign/` prece"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3595,
+    3609
+   ],
+   "text_prefix_16b": "`![[img.png]]` r"
+  },
+  {
+   "info": {
+    "target": "asset-normalization"
+   },
+   "kind": "wikilink",
+   "span": [
+    3661,
+    3684
+   ],
+   "text_prefix_16b": "[[asset-normaliz"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3722,
+    3730
+   ],
+   "text_prefix_16b": "`^sweep` perform"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Page Types",
+   "kind": "heading",
+   "span": [
+    3768,
+    3781
+   ],
+   "text_prefix_16b": "## Page Types\n\nC"
+  },
+  {
+   "kind": "table",
+   "span": [
+    3881,
+    4805
+   ],
+   "text_prefix_16b": "| Page type | Di"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3975,
+    4004
+   ],
+   "text_prefix_16b": "`domains/<cluste"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4007,
+    4049
+   ],
+   "text_prefix_16b": "`tags: [domain/<"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4095,
+    4134
+   ],
+   "text_prefix_16b": "`tags: [domain/<"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4154,
+    4173
+   ],
+   "text_prefix_16b": "`sources/<bucket"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4176,
+    4209
+   ],
+   "text_prefix_16b": "`tags: [type/sou"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4211,
+    4228
+   ],
+   "text_prefix_16b": "`source: [[raw]]"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4230,
+    4239
+   ],
+   "text_prefix_16b": "`created` | [[SO"
+  },
+  {
+   "info": {
+    "heading": "Bucket masters",
+    "target": "SOURCES"
+   },
+   "kind": "wikilink",
+   "span": [
+    4242,
+    4268
+   ],
+   "text_prefix_16b": "[[SOURCES#Bucket"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4285,
+    4306
+   ],
+   "text_prefix_16b": "`synthesis/<buck"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4309,
+    4323
+   ],
+   "text_prefix_16b": "`type: bucket`, "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4325,
+    4350
+   ],
+   "text_prefix_16b": "`class: recipe\\|"
+  },
+  {
+   "info": {
+    "target": "synthesis/SYNTHESIS"
+   },
+   "kind": "wikilink",
+   "span": [
+    4353,
+    4376
+   ],
+   "text_prefix_16b": "[[synthesis/SYNT"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4390,
+    4407
+   ],
+   "text_prefix_16b": "`effects/<kind>/"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4410,
+    4423
+   ],
+   "text_prefix_16b": "`type/effect` + "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4430,
+    4445
+   ],
+   "text_prefix_16b": "`effect/<kind>` "
+  },
+  {
+   "info": {
+    "target": "EFFECTS"
+   },
+   "kind": "wikilink",
+   "span": [
+    4454,
+    4465
+   ],
+   "text_prefix_16b": "[[EFFECTS]] |\n| "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4478,
+    4486
+   ],
+   "text_prefix_16b": "`inbox/` | per c"
+  },
+  {
+   "info": {
+    "target": "INBOX"
+   },
+   "kind": "wikilink",
+   "span": [
+    4529,
+    4538
+   ],
+   "text_prefix_16b": "[[INBOX]], [[inb"
+  },
+  {
+   "info": {
+    "target": "inbox-pipeline"
+   },
+   "kind": "wikilink",
+   "span": [
+    4540,
+    4558
+   ],
+   "text_prefix_16b": "[[inbox-pipeline"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4594,
+    4599
+   ],
+   "text_prefix_16b": "`.md`, any layer"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4613,
+    4641
+   ],
+   "text_prefix_16b": "`tags: [type/ass"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4643,
+    4650
+   ],
+   "text_prefix_16b": "`asset`, `sha256"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4652,
+    4660
+   ],
+   "text_prefix_16b": "`sha256`, `bytes"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4662,
+    4669
+   ],
+   "text_prefix_16b": "`bytes`, `create"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4671,
+    4680
+   ],
+   "text_prefix_16b": "`created`, `md-f"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4682,
+    4692
+   ],
+   "text_prefix_16b": "`md-fetch` | [[a"
+  },
+  {
+   "info": {
+    "target": "asset-normalization"
+   },
+   "kind": "wikilink",
+   "span": [
+    4695,
+    4718
+   ],
+   "text_prefix_16b": "[[asset-normaliz"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4729,
+    4736
+   ],
+   "text_prefix_16b": "`logs/` | `tags:"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4739,
+    4770
+   ],
+   "text_prefix_16b": "`tags: [meta/log"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4772,
+    4783
+   ],
+   "text_prefix_16b": "`type: log`, `op"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4785,
+    4789
+   ],
+   "text_prefix_16b": "`op`, `date` | \\xe2"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4791,
+    4797
+   ],
+   "text_prefix_16b": "`date` | \u2014 |\n\n"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4879,
+    4898
+   ],
+   "text_prefix_16b": "`type/domain-ind"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4917,
+    4936
+   ],
+   "text_prefix_16b": "`type/domain-ind"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5027,
+    5032
+   ],
+   "text_prefix_16b": "`.md` directly u"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5048,
+    5068
+   ],
+   "text_prefix_16b": "`domains/<cluste"
+  },
+  {
+   "info": {
+    "target": "domain-home-unique"
+   },
+   "kind": "wikilink",
+   "span": [
+    5234,
+    5256
+   ],
+   "text_prefix_16b": "[[domain-home-un"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5338,
+    5347
+   ],
+   "text_prefix_16b": "`source:` `[[wik"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5348,
+    5362
+   ],
+   "text_prefix_16b": "`[[wikilink]]` t"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5374,
+    5382
+   ],
+   "text_prefix_16b": "`inbox/` file or"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Effect pages \u2014 the receipt schema",
+   "kind": "heading",
+   "span": [
+    5589,
+    5627
+   ],
+   "text_prefix_16b": "## Effect pages "
+  },
+  {
+   "info": {
+    "target": "effect-attestation-refounding"
+   },
+   "kind": "wikilink",
+   "span": [
+    5641,
+    5674
+   ],
+   "text_prefix_16b": "[[effect-attesta"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5952,
+    5960
+   ],
+   "text_prefix_16b": "`commit`, no `in"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5965,
+    5974
+   ],
+   "text_prefix_16b": "`inputs:`) keeps"
+  },
+  {
+   "info": {
+    "heading": "The pin contract (four parts)",
+    "target": "EFFECTS"
+   },
+   "kind": "wikilink",
+   "span": [
+    6012,
+    6053
+   ],
+   "text_prefix_16b": "[[EFFECTS#The pi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6110,
+    6119
+   ],
+   "text_prefix_16b": "`inputs:` presen"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6310,
+    6339
+   ],
+   "text_prefix_16b": "`md-env: '[[LLM_"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6448,
+    6457
+   ],
+   "text_prefix_16b": "`^<name>`, and t"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6525,
+    6533
+   ],
+   "text_prefix_16b": "`inputs`/`receip"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6534,
+    6543
+   ],
+   "text_prefix_16b": "`receipt`, never"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6551,
+    6562
+   ],
+   "text_prefix_16b": "`md-inputs`): th"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6569,
+    6575
+   ],
+   "text_prefix_16b": "`md-*` prefix is"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6667,
+    6678
+   ],
+   "text_prefix_16b": "`md attest`, nev"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Effect pages \u2014 the receipt schema/Receipt tri-state",
+   "kind": "heading",
+   "span": [
+    6812,
+    6833
+   ],
+   "text_prefix_16b": "### Receipt tri-"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6839,
+    6848
+   ],
+   "text_prefix_16b": "`receipt` frontm"
+  },
+  {
+   "kind": "table",
+   "span": [
+    6905,
+    7241
+   ],
+   "text_prefix_16b": "| Frontmatter | "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    6943,
+    6958
+   ],
+   "text_prefix_16b": "`receipt: null` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7051,
+    7077
+   ],
+   "text_prefix_16b": "`receipt: '[[#^r"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7117,
+    7127
+   ],
+   "text_prefix_16b": "`^receipt` block"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7175,
+    7192
+   ],
+   "text_prefix_16b": "`repo: home-wiki"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7220,
+    7238
+   ],
+   "text_prefix_16b": "`owned-no-receip"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7290,
+    7305
+   ],
+   "text_prefix_16b": "`receipt: null` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7326,
+    7338
+   ],
+   "text_prefix_16b": "`hash: null`, st"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7411,
+    7437
+   ],
+   "text_prefix_16b": "`null \u2192 '[[#^r"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Effect pages \u2014 the receipt schema/The chain block \u2014 `^inputs`",
+   "kind": "heading",
+   "span": [
+    7611,
+    7644
+   ],
+   "text_prefix_16b": "### The chain bl"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7635,
+    7644
+   ],
+   "text_prefix_16b": "`^inputs`\n\nFront"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7692,
+    7716
+   ],
+   "text_prefix_16b": "`inputs: '[[#^in"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    7807,
+    7816
+   ],
+   "text_prefix_16b": "`^inputs`; each "
+  },
+  {
+   "info": {
+    "info_string": "yaml"
+   },
+   "kind": "fence",
+   "span": [
+    7882,
+    8209
+   ],
+   "text_prefix_16b": "```yaml\n# ^input"
+  },
+  {
+   "kind": "table",
+   "span": [
+    8211,
+    8699
+   ],
+   "text_prefix_16b": "| Field | Writer"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8261,
+    8266
+   ],
+   "text_prefix_16b": "`ref` | author |"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8278,
+    8288
+   ],
+   "text_prefix_16b": "`[[page]]`, `[[p"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8290,
+    8308
+   ],
+   "text_prefix_16b": "`[[page#Section]"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8310,
+    8327
+   ],
+   "text_prefix_16b": "`[[page#^block]]"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8370,
+    8377
+   ],
+   "text_prefix_16b": "`claim` | author"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8452,
+    8458
+   ],
+   "text_prefix_16b": "`hash` | **machi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8565,
+    8576
+   ],
+   "text_prefix_16b": "`hash-algo` | ma"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8616,
+    8620
+   ],
+   "text_prefix_16b": "`vN`); a mismatc"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8807,
+    8816
+   ],
+   "text_prefix_16b": "`#^block` for fi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8867,
+    8877
+   ],
+   "text_prefix_16b": "`![[\u2026]]` trans"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    8952,
+    8961
+   ],
+   "text_prefix_16b": "`[[\u2026]]` refere"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    9147,
+    9165
+   ],
+   "text_prefix_16b": "`inbox/scraped/*"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    9272,
+    9287
+   ],
+   "text_prefix_16b": "`hash-algo: v1` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    9352,
+    9360
+   ],
+   "text_prefix_16b": "`inputs` edge to"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    9489,
+    9499
+   ],
+   "text_prefix_16b": "`checksum`** (it"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    9833,
+    9850
+   ],
+   "text_prefix_16b": "`effect-rootless"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    9861,
+    9869
+   ],
+   "text_prefix_16b": "`inputs` MUST be"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    9964,
+    9975
+   ],
+   "text_prefix_16b": "`[[#Spec]]`); ed"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10074,
+    10096
+   ],
+   "text_prefix_16b": "`effect-graph-ac"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Effect pages \u2014 the receipt schema/The receipt block \u2014 `^receipt`",
+   "kind": "heading",
+   "span": [
+    10108,
+    10144
+   ],
+   "text_prefix_16b": "### The receipt "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10134,
+    10144
+   ],
+   "text_prefix_16b": "`^receipt`\n\nFenc"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10167,
+    10177
+   ],
+   "text_prefix_16b": "`^receipt`, addr"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10205,
+    10214
+   ],
+   "text_prefix_16b": "`receipt` key, w"
+  },
+  {
+   "info": {
+    "info_string": "yaml"
+   },
+   "kind": "fence",
+   "span": [
+    10289,
+    10635
+   ],
+   "text_prefix_16b": "```yaml\n# ^recei"
+  },
+  {
+   "kind": "table",
+   "span": [
+    10637,
+    11466
+   ],
+   "text_prefix_16b": "| Field | Meanin"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10685,
+    10693
+   ],
+   "text_prefix_16b": "`commit` | full "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10735,
+    10752
+   ],
+   "text_prefix_16b": "`origin/<branch>"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10805,
+    10815
+   ],
+   "text_prefix_16b": "`location` | fil"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10860,
+    10866
+   ],
+   "text_prefix_16b": "`repo`); scalar "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10944,
+    10954
+   ],
+   "text_prefix_16b": "`checksum` | `gi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    10957,
+    11002
+   ],
+   "text_prefix_16b": "`git -C <repo> r"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11098,
+    11110
+   ],
+   "text_prefix_16b": "`applied_at` | U"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11162,
+    11178
+   ],
+   "text_prefix_16b": "`procedure-hash`"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11206,
+    11214
+   ],
+   "text_prefix_16b": "`^check`+`^apply"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11215,
+    11223
+   ],
+   "text_prefix_16b": "`^apply` blocks "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11311,
+    11320
+   ],
+   "text_prefix_16b": "`verdict` | `<pa"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11323,
+    11344
+   ],
+   "text_prefix_16b": "`<path>@<commit-"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11472,
+    11488
+   ],
+   "text_prefix_16b": "`procedure-hash`"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11524,
+    11532
+   ],
+   "text_prefix_16b": "`^apply`/`^check"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11533,
+    11541
+   ],
+   "text_prefix_16b": "`^check` edit) i"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11686,
+    11697
+   ],
+   "text_prefix_16b": "`procedure`, rou"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11806,
+    11821
+   ],
+   "text_prefix_16b": "`(old \u2192 new)` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11914,
+    11935
+   ],
+   "text_prefix_16b": "`<path>@<commit-"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    11967,
+    11980
+   ],
+   "text_prefix_16b": "`obsidian://` UR"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12254,
+    12273
+   ],
+   "text_prefix_16b": "`<key>.executor."
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12275,
+    12294
+   ],
+   "text_prefix_16b": "`<key>.reviewer."
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12318,
+    12327
+   ],
+   "text_prefix_16b": "`verdict` field "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12419,
+    12430
+   ],
+   "text_prefix_16b": "`md attest` refe"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12467,
+    12484
+   ],
+   "text_prefix_16b": "`repo: home-wiki"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12495,
+    12505
+   ],
+   "text_prefix_16b": "`^receipt` block"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12568,
+    12576
+   ],
+   "text_prefix_16b": "`^check` verifie"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12642,
+    12654
+   ],
+   "text_prefix_16b": "`applied_at`, P2"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Effect pages \u2014 the receipt schema/Release variant \u2014 un-stewarded third-party effects",
+   "kind": "heading",
+   "span": [
+    12774,
+    12830
+   ],
+   "text_prefix_16b": "### Release vari"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12900,
+    12926
+   ],
+   "text_prefix_16b": "`receipt-variant"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12933,
+    12941
+   ],
+   "text_prefix_16b": "`^apply` = **dow"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Effect pages \u2014 the receipt schema/Well-known units and writer discipline",
+   "kind": "heading",
+   "span": [
+    13272,
+    13314
+   ],
+   "text_prefix_16b": "### Well-known u"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13398,
+    13408
+   ],
+   "text_prefix_16b": "`## Chain` (`^in"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13410,
+    13419
+   ],
+   "text_prefix_16b": "`^inputs`) \u2192 `"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13425,
+    13437
+   ],
+   "text_prefix_16b": "`## Receipt` (`^"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13439,
+    13449
+   ],
+   "text_prefix_16b": "`^receipt`) \u2192 "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13455,
+    13469
+   ],
+   "text_prefix_16b": "`## Changelog` \\xe2"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13474,
+    13484
+   ],
+   "text_prefix_16b": "`## Notes`). His"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13527,
+    13541
+   ],
+   "text_prefix_16b": "`CHANGELOG.md`; "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13578,
+    13592
+   ],
+   "text_prefix_16b": "`## Changelog` s"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13625,
+    13635
+   ],
+   "text_prefix_16b": "`location` (that"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13700,
+    13723
+   ],
+   "text_prefix_16b": "`no-pin-values-i"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13732,
+    13740
+   ],
+   "text_prefix_16b": "`commit`/`checks"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13741,
+    13751
+   ],
+   "text_prefix_16b": "`checksum`/resol"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13846,
+    13854
+   ],
+   "text_prefix_16b": "`remote`, `branc"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13856,
+    13864
+   ],
+   "text_prefix_16b": "`branch`, read-w"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13881,
+    13889
+   ],
+   "text_prefix_16b": "`commit`) live o"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13908,
+    13928
+   ],
+   "text_prefix_16b": "`sources/git/<sl"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13943,
+    13950
+   ],
+   "text_prefix_16b": "`repo:` on an ef"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14013,
+    14043
+   ],
+   "text_prefix_16b": "`repo-resolves-t"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14051,
+    14062
+   ],
+   "text_prefix_16b": "`home-wiki`.\n\n##"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Tag Taxonomy",
+   "kind": "heading",
+   "span": [
+    14065,
+    14080
+   ],
+   "text_prefix_16b": "## Tag Taxonomy\n"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14209,
+    14237
+   ],
+   "text_prefix_16b": "`rg -o '\\btopic/"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14254,
+    14261
+   ],
+   "text_prefix_16b": "`.base`), never "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14305,
+    14314
+   ],
+   "text_prefix_16b": "`domain/` subjec"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14368,
+    14375
+   ],
+   "text_prefix_16b": "`type/` page kin"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14394,
+    14407
+   ],
+   "text_prefix_16b": "`type/effect` + "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14410,
+    14425
+   ],
+   "text_prefix_16b": "`effect/<kind>` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14440,
+    14449
+   ],
+   "text_prefix_16b": "`effect/` kinds "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14503,
+    14511
+   ],
+   "text_prefix_16b": "`topic/`, `plugi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14513,
+    14522
+   ],
+   "text_prefix_16b": "`plugin/`, `sour"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14524,
+    14533
+   ],
+   "text_prefix_16b": "`source/`, `agen"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14535,
+    14543
+   ],
+   "text_prefix_16b": "`agent/`, `role/"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14545,
+    14552
+   ],
+   "text_prefix_16b": "`role/`, `sessio"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14554,
+    14564
+   ],
+   "text_prefix_16b": "`session/`, `pro"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14566,
+    14576
+   ],
+   "text_prefix_16b": "`project/`, `con"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14578,
+    14591
+   ],
+   "text_prefix_16b": "`convention/` op"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14598,
+    14609
+   ],
+   "text_prefix_16b": "`priority/`, `st"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14611,
+    14620
+   ],
+   "text_prefix_16b": "`status/`, `use/"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14622,
+    14628
+   ],
+   "text_prefix_16b": "`use/`, `has/` c"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14630,
+    14636
+   ],
+   "text_prefix_16b": "`has/` closed. `"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14645,
+    14650
+   ],
+   "text_prefix_16b": "`do/` and `meta/"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14655,
+    14662
+   ],
+   "text_prefix_16b": "`meta/` are open"
+  },
+  {
+   "info": {
+    "heading": "Prefix registry",
+    "target": "tag-taxonomy-enforcement"
+   },
+   "kind": "wikilink",
+   "span": [
+    14793,
+    14837
+   ],
+   "text_prefix_16b": "[[tag-taxonomy-e"
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Linking Rules",
+   "kind": "heading",
+   "span": [
+    14840,
+    14856
+   ],
+   "text_prefix_16b": "## Linking Rules"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14871,
+    14886
+   ],
+   "text_prefix_16b": "`[[wikilinks]]`,"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14894,
+    14911
+   ],
+   "text_prefix_16b": "`[text](path.md)"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14994,
+    15032
+   ],
+   "text_prefix_16b": "`md fix --rules "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15110,
+    15155
+   ],
+   "text_prefix_16b": "`[[plugin-archit"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15221,
+    15242
+   ],
+   "text_prefix_16b": "`backticked-wiki"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15306,
+    15321
+   ],
+   "text_prefix_16b": "`obsidian move` "
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Lint",
+   "kind": "heading",
+   "span": [
+    15349,
+    15356
+   ],
+   "text_prefix_16b": "## Lint\n\nThe wik"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15377,
+    15387
+   ],
+   "text_prefix_16b": "`md check` clean"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15426,
+    15462
+   ],
+   "text_prefix_16b": "`health/rules/{c"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15492,
+    15507
+   ],
+   "text_prefix_16b": "`meridian.yaml`."
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15552,
+    15566
+   ],
+   "text_prefix_16b": "`lint-ignore:` f"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15580,
+    15600
+   ],
+   "text_prefix_16b": "`<!-- md:ignore "
+  },
+  {
+   "info": {
+    "target": "HEALTH"
+   },
+   "kind": "wikilink",
+   "span": [
+    15623,
+    15633
+   ],
+   "text_prefix_16b": "[[HEALTH]].\n\n## "
+  },
+  {
+   "hpath": "Wiki Schema \u2014 home-wiki/Agent kernel",
+   "kind": "heading",
+   "span": [
+    15636,
+    15651
+   ],
+   "text_prefix_16b": "## Agent kernel\n"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15661,
+    15673
+   ],
+   "text_prefix_16b": "`_unstaged/` is "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15721,
+    15731
+   ],
+   "text_prefix_16b": "`sources/` are i"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15747,
+    15757
+   ],
+   "text_prefix_16b": "`domains/` and `"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15762,
+    15774
+   ],
+   "text_prefix_16b": "`synthesis/` evo"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15783,
+    15793
+   ],
+   "text_prefix_16b": "`effects/` point"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    15951,
+    15969
+   ],
+   "text_prefix_16b": "`md run \u2026 fetc"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    16141,
+    16156
+   ],
+   "text_prefix_16b": "`[[wikilinks]]`;"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    16248,
+    16263
+   ],
+   "text_prefix_16b": "`obsidian move`."
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    16364,
+    16383
+   ],
+   "text_prefix_16b": "`type/domain-ind"
+  }
+ ],
+ "schema": "gt-v2"
+}

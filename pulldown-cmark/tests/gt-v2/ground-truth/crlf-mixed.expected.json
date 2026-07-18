@@ -1,0 +1,120 @@
+{
+ "file": "adversarial/crlf-mixed.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "title"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    27
+   ],
+   "text_prefix_16b": "---\r\ntitle: crlf"
+  },
+  {
+   "hpath": "CRLF heading ^crlf-h",
+   "kind": "heading",
+   "span": [
+    31,
+    53
+   ],
+   "text_prefix_16b": "# CRLF heading ^"
+  },
+  {
+   "info": {
+    "id": "crlf-h"
+   },
+   "kind": "anchor",
+   "span": [
+    46,
+    53
+   ],
+   "text_prefix_16b": "^crlf-h\r\n\r\nLine "
+  },
+  {
+   "info": {
+    "id": "crlf-plain"
+   },
+   "kind": "anchor",
+   "span": [
+    84,
+    95
+   ],
+   "text_prefix_16b": "^crlf-plain\r\n\r\n>"
+  },
+  {
+   "info": {
+    "fold": "-",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    99,
+    169
+   ],
+   "text_prefix_16b": "> [!note]- crlf "
+  },
+  {
+   "info": {
+    "heading": "Frag",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    138,
+    151
+   ],
+   "text_prefix_16b": "[[Page#Frag]] an"
+  },
+  {
+   "info": {
+    "block": "b",
+    "target": "Embed"
+   },
+   "kind": "embed",
+   "span": [
+    156,
+    169
+   ],
+   "text_prefix_16b": "![[Embed#^b]]\r\n\r"
+  },
+  {
+   "info": {
+    "checked": false,
+    "depth": 1
+   },
+   "kind": "task",
+   "span": [
+    173,
+    199
+   ],
+   "text_prefix_16b": "- [ ] crlf task "
+  },
+  {
+   "info": {
+    "id": "crlf-task"
+   },
+   "kind": "anchor",
+   "span": [
+    189,
+    199
+   ],
+   "text_prefix_16b": "^crlf-task\r\n\r\nLa"
+  },
+  {
+   "info": {
+    "id": "crlf-eof"
+   },
+   "kind": "anchor",
+   "span": [
+    218,
+    227
+   ],
+   "text_prefix_16b": "^crlf-eof\r\n"
+  }
+ ],
+ "schema": "gt-v2"
+}

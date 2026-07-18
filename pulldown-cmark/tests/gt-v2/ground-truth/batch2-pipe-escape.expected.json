@@ -1,0 +1,108 @@
+{
+ "file": "adversarial/batch2-pipe-escape.md",
+ "nodes": [
+  {
+   "hpath": "Batch-2: pipe metadata, escaped pipe, escaped bang",
+   "kind": "heading",
+   "span": [
+    0,
+    52
+   ],
+   "text_prefix_16b": "# Batch-2: pipe "
+  },
+  {
+   "info": {
+    "fold": "",
+    "metadata": "meta",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    54,
+    108
+   ],
+   "text_prefix_16b": "> [!note|meta] p"
+  },
+  {
+   "info": {
+    "alias": "esc-alias",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    181,
+    200
+   ],
+   "text_prefix_16b": "[[Page\\|esc-alia"
+  },
+  {
+   "info": {
+    "alias": "plain-alias",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    233,
+    253
+   ],
+   "text_prefix_16b": "[[Page|plain-ali"
+  },
+  {
+   "info": {
+    "target": "not-bound"
+   },
+   "kind": "wikilink",
+   "span": [
+    288,
+    301
+   ],
+   "text_prefix_16b": "[[not-bound]] de"
+  },
+  {
+   "info": {
+    "target": "bound"
+   },
+   "kind": "embed",
+   "span": [
+    333,
+    343
+   ],
+   "text_prefix_16b": "![[bound]] binds"
+  },
+  {
+   "info": {
+    "target": "glued-bang"
+   },
+   "kind": "embed",
+   "span": [
+    375,
+    390
+   ],
+   "text_prefix_16b": "![[glued-bang]] "
+  },
+  {
+   "info": {
+    "target": "padded"
+   },
+   "kind": "wikilink",
+   "span": [
+    415,
+    427
+   ],
+   "text_prefix_16b": "[[ padded ]] and"
+  },
+  {
+   "info": {
+    "heading": "Alpha",
+    "target": "t"
+   },
+   "kind": "wikilink",
+   "span": [
+    441,
+    453
+   ],
+   "text_prefix_16b": "[[t#Alpha ]] tra"
+  }
+ ],
+ "schema": "gt-v2"
+}

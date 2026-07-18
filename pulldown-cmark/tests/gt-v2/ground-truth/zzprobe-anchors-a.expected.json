@@ -1,0 +1,196 @@
+{
+ "file": "adversarial/zzprobe-anchors-a.md",
+ "nodes": [
+  {
+   "info": {
+    "id": "a01"
+   },
+   "kind": "anchor",
+   "span": [
+    22,
+    26
+   ],
+   "text_prefix_16b": "^a01\n\nP02 traili"
+  },
+  {
+   "info": {
+    "id": "A03"
+   },
+   "kind": "anchor",
+   "span": [
+    70,
+    74
+   ],
+   "text_prefix_16b": "^A03\n\nP04 unders"
+  },
+  {
+   "info": {
+    "id": "a08"
+   },
+   "kind": "anchor",
+   "span": [
+    222,
+    226
+   ],
+   "text_prefix_16b": "^a08\n\n^a09\n\nP10 "
+  },
+  {
+   "info": {
+    "id": "a09"
+   },
+   "kind": "anchor",
+   "span": [
+    228,
+    232
+   ],
+   "text_prefix_16b": "^a09\n\nP10 next-l"
+  },
+  {
+   "info": {
+    "id": "a10"
+   },
+   "kind": "anchor",
+   "span": [
+    255,
+    259
+   ],
+   "text_prefix_16b": "^a10\n\n# Heading "
+  },
+  {
+   "hpath": "Heading ten ^a11",
+   "kind": "heading",
+   "span": [
+    261,
+    279
+   ],
+   "text_prefix_16b": "# Heading ten ^a"
+  },
+  {
+   "info": {
+    "id": "a11"
+   },
+   "kind": "anchor",
+   "span": [
+    275,
+    279
+   ],
+   "text_prefix_16b": "^a11\n\n- item one"
+  },
+  {
+   "info": {
+    "id": "a12"
+   },
+   "kind": "anchor",
+   "span": [
+    292,
+    296
+   ],
+   "text_prefix_16b": "^a12\n- item two\n"
+  },
+  {
+   "info": {
+    "id": "a13"
+   },
+   "kind": "anchor",
+   "span": [
+    318,
+    322
+   ],
+   "text_prefix_16b": "^a13\n\n> quote li"
+  },
+  {
+   "info": {
+    "id": "a14"
+   },
+   "kind": "anchor",
+   "span": [
+    337,
+    341
+   ],
+   "text_prefix_16b": "^a14\n\n| c1 | c2 "
+  },
+  {
+   "kind": "table",
+   "span": [
+    343,
+    383
+   ],
+   "text_prefix_16b": "| c1 | c2 |\n| --"
+  },
+  {
+   "info": {
+    "id": "a15"
+   },
+   "kind": "anchor",
+   "span": [
+    372,
+    376
+   ],
+   "text_prefix_16b": "^a15 | v2 |\n\n| c"
+  },
+  {
+   "kind": "table",
+   "span": [
+    385,
+    420
+   ],
+   "text_prefix_16b": "| c1 | c2 |\n| --"
+  },
+  {
+   "info": {
+    "id": "a16"
+   },
+   "kind": "anchor",
+   "span": [
+    422,
+    426
+   ],
+   "text_prefix_16b": "^a16\n\n```\ncode ^"
+  },
+  {
+   "info": {
+    "info_string": ""
+   },
+   "kind": "fence",
+   "span": [
+    428,
+    445
+   ],
+   "text_prefix_16b": "```\ncode ^a17\n``"
+  },
+  {
+   "info": {
+    "id": "a18"
+   },
+   "kind": "anchor",
+   "span": [
+    447,
+    451
+   ],
+   "text_prefix_16b": "^a18\n\nP19 no spa"
+  },
+  {
+   "info": {
+    "id": "a20"
+   },
+   "kind": "anchor",
+   "span": [
+    494,
+    498
+   ],
+   "text_prefix_16b": "^a20\n\nP21 escape"
+  },
+  {
+   "info": {
+    "id": "a-23-x"
+   },
+   "kind": "anchor",
+   "span": [
+    555,
+    562
+   ],
+   "text_prefix_16b": "^a-23-x\n\nP24 ^\n"
+  }
+ ],
+ "schema": "gt-v2"
+}

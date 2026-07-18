@@ -1,0 +1,159 @@
+{
+ "file": "adversarial/callouts-nested.md",
+ "nodes": [
+  {
+   "hpath": "Nested callouts",
+   "kind": "heading",
+   "span": [
+    0,
+    17
+   ],
+   "text_prefix_16b": "# Nested callout"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "outer"
+   },
+   "kind": "callout",
+   "span": [
+    19,
+    80
+   ],
+   "text_prefix_16b": "> [!outer]\n> out"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "inner"
+   },
+   "kind": "callout",
+   "span": [
+    50,
+    80
+   ],
+   "text_prefix_16b": "> [!inner]\n> > i"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "l1"
+   },
+   "kind": "callout",
+   "span": [
+    82,
+    183
+   ],
+   "text_prefix_16b": "> [!l1] Level on"
+  },
+  {
+   "info": {
+    "fold": "-",
+    "type": "l2"
+   },
+   "kind": "callout",
+   "span": [
+    102,
+    183
+   ],
+   "text_prefix_16b": "> [!l2]- Level t"
+  },
+  {
+   "info": {
+    "fold": "+",
+    "type": "l3"
+   },
+   "kind": "callout",
+   "span": [
+    144,
+    183
+   ],
+   "text_prefix_16b": "> [!l3]+ Level t"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "inside-plain"
+   },
+   "kind": "callout",
+   "span": [
+    212,
+    270
+   ],
+   "text_prefix_16b": "> [!inside-plain"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "host"
+   },
+   "kind": "callout",
+   "span": [
+    272,
+    366
+   ],
+   "text_prefix_16b": "> [!host] callou"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "parent"
+   },
+   "kind": "callout",
+   "span": [
+    368,
+    462
+   ],
+   "text_prefix_16b": "> [!parent]\n> > "
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "child-a"
+   },
+   "kind": "callout",
+   "span": [
+    382,
+    419
+   ],
+   "text_prefix_16b": "> [!child-a] fir"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "child-b"
+   },
+   "kind": "callout",
+   "span": [
+    424,
+    462
+   ],
+   "text_prefix_16b": "> [!child-b] sec"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "gap"
+   },
+   "kind": "callout",
+   "span": [
+    464,
+    524
+   ],
+   "text_prefix_16b": "> [!gap]\n>\n> > ["
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "after-gap"
+   },
+   "kind": "callout",
+   "span": [
+    477,
+    524
+   ],
+   "text_prefix_16b": "> [!after-gap] n"
+  }
+ ],
+ "schema": "gt-v2"
+}

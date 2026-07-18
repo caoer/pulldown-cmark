@@ -1,0 +1,976 @@
+{
+ "file": "corpus/obsidian-style-guide.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "aliases",
+     "tags",
+     "created",
+     "lint-ignore"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    146
+   ],
+   "text_prefix_16b": "---\naliases: [ob"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide",
+   "kind": "heading",
+   "span": [
+    148,
+    179
+   ],
+   "text_prefix_16b": "# Obsidian Markd"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "abstract"
+   },
+   "kind": "callout",
+   "span": [
+    181,
+    358
+   ],
+   "text_prefix_16b": "> [!abstract] Pu"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    254,
+    259
+   ],
+   "text_prefix_16b": "`.md` files in t"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Linking",
+   "kind": "heading",
+   "span": [
+    360,
+    370
+   ],
+   "text_prefix_16b": "## Linking\n\n**Al"
+  },
+  {
+   "kind": "table",
+   "span": [
+    458,
+    737
+   ],
+   "text_prefix_16b": "| Do | Don't |\n|"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    485,
+    502
+   ],
+   "text_prefix_16b": "`[[style-guide]]"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    505,
+    538
+   ],
+   "text_prefix_16b": "`[style guide](."
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    543,
+    577
+   ],
+   "text_prefix_16b": "`[[style-guide\\|"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    580,
+    627
+   ],
+   "text_prefix_16b": "`[our convention"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    632,
+    650
+   ],
+   "text_prefix_16b": "`[[note#Heading]"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    653,
+    681
+   ],
+   "text_prefix_16b": "`[section](note."
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    686,
+    706
+   ],
+   "text_prefix_16b": "`[[note#^block-i"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    748,
+    761
+   ],
+   "text_prefix_16b": "`[text](url)` li"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Linking/Wikilink resolution",
+   "kind": "heading",
+   "span": [
+    801,
+    824
+   ],
+   "text_prefix_16b": "### Wikilink res"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    872,
+    882
+   ],
+   "text_prefix_16b": "`[[plan]]` finds"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    889,
+    898
+   ],
+   "text_prefix_16b": "`plan.md` anywhe"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    962,
+    981
+   ],
+   "text_prefix_16b": "`[[projects/plan"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Embeds",
+   "kind": "heading",
+   "span": [
+    1031,
+    1040
+   ],
+   "text_prefix_16b": "## Embeds\n\nPrefi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1065,
+    1068
+   ],
+   "text_prefix_16b": "`!` to transclud"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    1100,
+    1441
+   ],
+   "text_prefix_16b": "```md\n![[note]] "
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "tip"
+   },
+   "kind": "callout",
+   "span": [
+    1443,
+    1578
+   ],
+   "text_prefix_16b": "> [!tip] Image s"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1505,
+    1514
+   ],
+   "text_prefix_16b": "`assets/` or co-"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Callouts",
+   "kind": "heading",
+   "span": [
+    1580,
+    1591
+   ],
+   "text_prefix_16b": "## Callouts\n\nUse"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    1706,
+    1753
+   ],
+   "text_prefix_16b": "```md\n> [!type] "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1771,
+    1777
+   ],
+   "text_prefix_16b": "`note`, `info`, "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1779,
+    1785
+   ],
+   "text_prefix_16b": "`info`, `tip`, `"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1787,
+    1792
+   ],
+   "text_prefix_16b": "`tip`, `warning`"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1794,
+    1803
+   ],
+   "text_prefix_16b": "`warning`, `dang"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1805,
+    1813
+   ],
+   "text_prefix_16b": "`danger`, `bug`,"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1815,
+    1820
+   ],
+   "text_prefix_16b": "`bug`, `example`"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1822,
+    1831
+   ],
+   "text_prefix_16b": "`example`, `ques"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1833,
+    1843
+   ],
+   "text_prefix_16b": "`question`, `abs"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1845,
+    1855
+   ],
+   "text_prefix_16b": "`abstract`, `suc"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1857,
+    1866
+   ],
+   "text_prefix_16b": "`success`, `fail"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1868,
+    1877
+   ],
+   "text_prefix_16b": "`failure`, `quot"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1879,
+    1886
+   ],
+   "text_prefix_16b": "`quote`\n\n**Folda"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1909,
+    1912
+   ],
+   "text_prefix_16b": "`+` (default ope"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1931,
+    1934
+   ],
+   "text_prefix_16b": "`-` (default col"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    1969,
+    2080
+   ],
+   "text_prefix_16b": "```md\n> [!faq]- "
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    2096,
+    2169
+   ],
+   "text_prefix_16b": "```md\n> [!note] "
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Callouts/When to use which type",
+   "kind": "heading",
+   "span": [
+    2171,
+    2197
+   ],
+   "text_prefix_16b": "### When to use "
+  },
+  {
+   "kind": "table",
+   "span": [
+    2199,
+    2508
+   ],
+   "text_prefix_16b": "| Context | Type"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2249,
+    2258
+   ],
+   "text_prefix_16b": "`warning` |\n| Pr"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2290,
+    2296
+   ],
+   "text_prefix_16b": "`info` |\n| Best "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2333,
+    2338
+   ],
+   "text_prefix_16b": "`tip` |\n| Known "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2365,
+    2370
+   ],
+   "text_prefix_16b": "`bug` |\n| Decisi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2407,
+    2417
+   ],
+   "text_prefix_16b": "`abstract` |\n| C"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2452,
+    2461
+   ],
+   "text_prefix_16b": "`example` |\n| Op"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2496,
+    2506
+   ],
+   "text_prefix_16b": "`question` |\n\n##"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Frontmatter",
+   "kind": "heading",
+   "span": [
+    2510,
+    2524
+   ],
+   "text_prefix_16b": "## Frontmatter\n\n"
+  },
+  {
+   "info": {
+    "info_string": "yaml"
+   },
+   "kind": "fence",
+   "span": [
+    2579,
+    2621
+   ],
+   "text_prefix_16b": "```yaml\n---\ntags"
+  },
+  {
+   "info": {
+    "info_string": "yaml"
+   },
+   "kind": "fence",
+   "span": [
+    2660,
+    2787
+   ],
+   "text_prefix_16b": "```yaml\n---\nalia"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2820,
+    2823
+   ],
+   "text_prefix_16b": "`#` prefix\n- Use"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2850,
+    2863
+   ],
+   "text_prefix_16b": "`domain/area` no"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2873,
+    2886
+   ],
+   "text_prefix_16b": "`domain-area`\n- "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2889,
+    2898
+   ],
+   "text_prefix_16b": "`aliases` enable"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Tags",
+   "kind": "heading",
+   "span": [
+    2934,
+    2941
+   ],
+   "text_prefix_16b": "## Tags\n\n### Pla"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Tags/Placement",
+   "kind": "heading",
+   "span": [
+    2943,
+    2956
+   ],
+   "text_prefix_16b": "### Placement\n\n-"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3041,
+    3047
+   ],
+   "text_prefix_16b": "`#tag` in body t"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Tags/Conventions for this project",
+   "kind": "heading",
+   "span": [
+    3103,
+    3135
+   ],
+   "text_prefix_16b": "### Conventions "
+  },
+  {
+   "kind": "table",
+   "span": [
+    3137,
+    3533
+   ],
+   "text_prefix_16b": "| Prefix | Purpo"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3184,
+    3191
+   ],
+   "text_prefix_16b": "`type/` | Docume"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3210,
+    3221
+   ],
+   "text_prefix_16b": "`type/spec`, `ty"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3223,
+    3233
+   ],
+   "text_prefix_16b": "`type/adr`, `typ"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3235,
+    3247
+   ],
+   "text_prefix_16b": "`type/guide` |\n|"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3252,
+    3261
+   ],
+   "text_prefix_16b": "`domain/` | Know"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3281,
+    3295
+   ],
+   "text_prefix_16b": "`domain/infra`, "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3297,
+    3314
+   ],
+   "text_prefix_16b": "`domain/frontend"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3319,
+    3328
+   ],
+   "text_prefix_16b": "`status/` | Life"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3349,
+    3364
+   ],
+   "text_prefix_16b": "`status/active`,"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3366,
+    3383
+   ],
+   "text_prefix_16b": "`status/archived"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3388,
+    3398
+   ],
+   "text_prefix_16b": "`project/` | Pro"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3417,
+    3432
+   ],
+   "text_prefix_16b": "`project/locus`,"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3434,
+    3456
+   ],
+   "text_prefix_16b": "`project/telegra"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3461,
+    3468
+   ],
+   "text_prefix_16b": "`meta/` | About "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3496,
+    3514
+   ],
+   "text_prefix_16b": "`meta/style-guid"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3516,
+    3531
+   ],
+   "text_prefix_16b": "`meta/template` "
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Comments",
+   "kind": "heading",
+   "span": [
+    3535,
+    3546
+   ],
+   "text_prefix_16b": "## Comments\n\n```"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    3548,
+    3681
+   ],
+   "text_prefix_16b": "```md\n%% Agent-o"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    3726,
+    3759
+   ],
+   "text_prefix_16b": "`%% Replace with"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Highlights",
+   "kind": "heading",
+   "span": [
+    3845,
+    3858
+   ],
+   "text_prefix_16b": "## Highlights\n\n`"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    3860,
+    3890
+   ],
+   "text_prefix_16b": "```md\n==highligh"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Math",
+   "kind": "heading",
+   "span": [
+    4003,
+    4010
+   ],
+   "text_prefix_16b": "## Math\n\n```md\nI"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    4012,
+    4075
+   ],
+   "text_prefix_16b": "```md\nInline: $O"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Diagrams",
+   "kind": "heading",
+   "span": [
+    4077,
+    4088
+   ],
+   "text_prefix_16b": "## Diagrams\n\n**M"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    4127,
+    4174
+   ],
+   "text_prefix_16b": "````md\n```mermai"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4196,
+    4209
+   ],
+   "text_prefix_16b": "`obsidian-d2` pl"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4225,
+    4229
+   ],
+   "text_prefix_16b": "`d2` binary. Not"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Dataview",
+   "kind": "heading",
+   "span": [
+    4295,
+    4306
+   ],
+   "text_prefix_16b": "## Dataview\n\n> ["
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "info"
+   },
+   "kind": "callout",
+   "span": [
+    4308,
+    4415
+   ],
+   "text_prefix_16b": "> [!info] Plugin"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    4435,
+    4683
+   ],
+   "text_prefix_16b": "````md\n%% List a"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Anti-Patterns",
+   "kind": "heading",
+   "span": [
+    4685,
+    4701
+   ],
+   "text_prefix_16b": "## Anti-Patterns"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "danger"
+   },
+   "kind": "callout",
+   "span": [
+    4703,
+    4729
+   ],
+   "text_prefix_16b": "> [!danger] Don'"
+  },
+  {
+   "kind": "table",
+   "span": [
+    4731,
+    5224
+   ],
+   "text_prefix_16b": "| Anti-pattern |"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4779,
+    4810
+   ],
+   "text_prefix_16b": "`[link text](rel"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4832,
+    4858
+   ],
+   "text_prefix_16b": "`[[page-name\\|li"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4863,
+    4885
+   ],
+   "text_prefix_16b": "`![alt](path/img"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4905,
+    4919
+   ],
+   "text_prefix_16b": "`![[img.png]]` o"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4923,
+    4942
+   ],
+   "text_prefix_16b": "`![[img.png\\|400"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4957,
+    4964
+   ],
+   "text_prefix_16b": "`<div>`, `<detai"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    4966,
+    4977
+   ],
+   "text_prefix_16b": "`<details>`) | C"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5026,
+    5045
+   ],
+   "text_prefix_16b": "`#my-project-inf"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5062,
+    5078
+   ],
+   "text_prefix_16b": "`#project/infra`"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5116,
+    5121
+   ],
+   "text_prefix_16b": "`---` block with"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5142,
+    5148
+   ],
+   "text_prefix_16b": "`tags` |\n| Hardc"
+  },
+  {
+   "hpath": "Obsidian Markdown Style Guide/Engineering Doc Recommendations",
+   "kind": "heading",
+   "span": [
+    5226,
+    5260
+   ],
+   "text_prefix_16b": "## Engineering D"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5446,
+    5467
+   ],
+   "text_prefix_16b": "`![[shared-secti"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5507,
+    5522
+   ],
+   "text_prefix_16b": "`> [!abstract]` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5538,
+    5553
+   ],
+   "text_prefix_16b": "`> [!question]` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5737,
+    5748
+   ],
+   "text_prefix_16b": "`^block-id` to i"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    5856,
+    5860
+   ],
+   "text_prefix_16b": "`%%` comments fo"
+  }
+ ],
+ "schema": "gt-v2"
+}

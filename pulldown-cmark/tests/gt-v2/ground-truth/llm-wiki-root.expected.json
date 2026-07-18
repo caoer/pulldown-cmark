@@ -1,0 +1,674 @@
+{
+ "file": "corpus/llm-wiki-root.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "aliases",
+     "tags",
+     "created",
+     "md-load-skill",
+     "md-required",
+     "md-env",
+     "md-runtime",
+     "md-companions",
+     "md-structure",
+     "md-blurbs",
+     "description"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    562
+   ],
+   "text_prefix_16b": "---\naliases: [ll"
+  },
+  {
+   "hpath": "LLM_WIKI \u2014 root contract",
+   "kind": "heading",
+   "span": [
+    564,
+    592
+   ],
+   "text_prefix_16b": "# LLM_WIKI \u2014 r"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    648,
+    701
+   ],
+   "text_prefix_16b": "`md run '{\"file\""
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    839,
+    868
+   ],
+   "text_prefix_16b": "`setup/wiki-root"
+  },
+  {
+   "info": {
+    "alias": "^required",
+    "block": "required",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    933,
+    957
+   ],
+   "text_prefix_16b": "[[#^required|^re"
+  },
+  {
+   "info": {
+    "heading": "Agent kernel",
+    "target": "SCHEMA"
+   },
+   "kind": "wikilink",
+   "span": [
+    1181,
+    1204
+   ],
+   "text_prefix_16b": "[[SCHEMA#Agent k"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1230,
+    1241
+   ],
+   "text_prefix_16b": "`SCHEMA.md` (the"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1462,
+    1465
+   ],
+   "text_prefix_16b": "`#`-headed secti"
+  },
+  {
+   "info": {
+    "alias": "^env",
+    "block": "env",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    1563,
+    1577
+   ],
+   "text_prefix_16b": "[[#^env|^env]] ("
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1579,
+    1594
+   ],
+   "text_prefix_16b": "`# Environment` "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1641,
+    1645
+   ],
+   "text_prefix_16b": "`md`; the sessio"
+  },
+  {
+   "info": {
+    "alias": "^runtime",
+    "block": "runtime",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    1803,
+    1825
+   ],
+   "text_prefix_16b": "[[#^runtime|^run"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1827,
+    1838
+   ],
+   "text_prefix_16b": "`# Runtime` \u2014 "
+  },
+  {
+   "info": {
+    "target": "runtime"
+   },
+   "kind": "wikilink",
+   "span": [
+    1864,
+    1875
+   ],
+   "text_prefix_16b": "[[runtime]]; pri"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1889,
+    1898
+   ],
+   "text_prefix_16b": "`MISSING` (+ fix"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1918,
+    1925
+   ],
+   "text_prefix_16b": "`DRIFT` (+ fix, "
+  },
+  {
+   "info": {
+    "alias": "^companions",
+    "block": "companions",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    2028,
+    2056
+   ],
+   "text_prefix_16b": "[[#^companions|^"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2058,
+    2072
+   ],
+   "text_prefix_16b": "`# Companions` \\xe2"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2120,
+    2137
+   ],
+   "text_prefix_16b": "`companion_entry"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2157,
+    2169
+   ],
+   "text_prefix_16b": "`^structure` \u2014"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2250,
+    2282
+   ],
+   "text_prefix_16b": "`- [slug](realpa"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2294,
+    2329
+   ],
+   "text_prefix_16b": "`- slug \u2014 abse"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2389,
+    2413
+   ],
+   "text_prefix_16b": "`LLM_WIKI.md#loa"
+  },
+  {
+   "info": {
+    "alias": "^structure",
+    "block": "structure",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    2483,
+    2509
+   ],
+   "text_prefix_16b": "[[#^structure|^s"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2511,
+    2524
+   ],
+   "text_prefix_16b": "`# Structure` \\xe2\\x80"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    2738,
+    2748
+   ],
+   "text_prefix_16b": "`UNLISTED` with "
+  },
+  {
+   "info": {
+    "alias": "^required",
+    "block": "required",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    2769,
+    2793
+   ],
+   "text_prefix_16b": "[[#^required|^re"
+  },
+  {
+   "info": {
+    "alias": "^load-skill",
+    "block": "load-skill",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    2976,
+    3004
+   ],
+   "text_prefix_16b": "[[#^load-skill|^"
+  },
+  {
+   "info": {
+    "heading": "Agent context",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    3010,
+    3028
+   ],
+   "text_prefix_16b": "[[#Agent context"
+  },
+  {
+   "info": {
+    "info_string": "bash"
+   },
+   "kind": "fence",
+   "span": [
+    3215,
+    4361
+   ],
+   "text_prefix_16b": "```bash\n# requir"
+  },
+  {
+   "info": {
+    "id": "required"
+   },
+   "kind": "anchor",
+   "span": [
+    4363,
+    4372
+   ],
+   "text_prefix_16b": "^required\n\n```ba"
+  },
+  {
+   "info": {
+    "info_string": "bash"
+   },
+   "kind": "fence",
+   "span": [
+    4374,
+    5559
+   ],
+   "text_prefix_16b": "```bash\n# env: e"
+  },
+  {
+   "info": {
+    "id": "env"
+   },
+   "kind": "anchor",
+   "span": [
+    5561,
+    5565
+   ],
+   "text_prefix_16b": "^env\n\n```bash\n# "
+  },
+  {
+   "info": {
+    "info_string": "bash"
+   },
+   "kind": "fence",
+   "span": [
+    5567,
+    6077
+   ],
+   "text_prefix_16b": "```bash\n# runtim"
+  },
+  {
+   "info": {
+    "id": "runtime"
+   },
+   "kind": "anchor",
+   "span": [
+    6079,
+    6087
+   ],
+   "text_prefix_16b": "^runtime\n\n```bas"
+  },
+  {
+   "info": {
+    "info_string": "bash"
+   },
+   "kind": "fence",
+   "span": [
+    6089,
+    7808
+   ],
+   "text_prefix_16b": "```bash\n# compan"
+  },
+  {
+   "info": {
+    "id": "companions"
+   },
+   "kind": "anchor",
+   "span": [
+    7810,
+    7821
+   ],
+   "text_prefix_16b": "^companions\n\n```"
+  },
+  {
+   "info": {
+    "info_string": "bash"
+   },
+   "kind": "fence",
+   "span": [
+    7823,
+    10280
+   ],
+   "text_prefix_16b": "```bash\n# struct"
+  },
+  {
+   "info": {
+    "id": "structure"
+   },
+   "kind": "anchor",
+   "span": [
+    10282,
+    10292
+   ],
+   "text_prefix_16b": "^structure\n\n```b"
+  },
+  {
+   "info": {
+    "info_string": "bash"
+   },
+   "kind": "fence",
+   "span": [
+    10294,
+    11684
+   ],
+   "text_prefix_16b": "```bash\n# blurbs"
+  },
+  {
+   "info": {
+    "id": "blurbs"
+   },
+   "kind": "anchor",
+   "span": [
+    11686,
+    11693
+   ],
+   "text_prefix_16b": "^blurbs\n\n```bash"
+  },
+  {
+   "info": {
+    "info_string": "bash"
+   },
+   "kind": "fence",
+   "span": [
+    11695,
+    12797
+   ],
+   "text_prefix_16b": "```bash\n# load-s"
+  },
+  {
+   "info": {
+    "id": "load-skill"
+   },
+   "kind": "anchor",
+   "span": [
+    12799,
+    12810
+   ],
+   "text_prefix_16b": "^load-skill\n\n## "
+  },
+  {
+   "hpath": "LLM_WIKI \u2014 root contract/Agent context",
+   "kind": "heading",
+   "span": [
+    12812,
+    12828
+   ],
+   "text_prefix_16b": "## Agent context"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    12988,
+    12999
+   ],
+   "text_prefix_16b": "`/llm-wiki` skil"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13014,
+    13025
+   ],
+   "text_prefix_16b": "`SCHEMA.md`. Rep"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13039,
+    13046
+   ],
+   "text_prefix_16b": "`wiki/` after ex"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13092,
+    13104
+   ],
+   "text_prefix_16b": "`locus/wiki` the"
+  },
+  {
+   "hpath": "LLM_WIKI \u2014 root contract/Agent context/Companion repos",
+   "kind": "heading",
+   "span": [
+    13182,
+    13201
+   ],
+   "text_prefix_16b": "### Companion re"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13252,
+    13275
+   ],
+   "text_prefix_16b": "`<wiki-slug>-<pu"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13437,
+    13470
+   ],
+   "text_prefix_16b": "`$CCC_LLM_WIKI_R"
+  },
+  {
+   "info": {
+    "alias": "^companions",
+    "block": "companions",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    13495,
+    13523
+   ],
+   "text_prefix_16b": "[[#^companions|^"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13524,
+    13541
+   ],
+   "text_prefix_16b": "`companion_entry"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13547,
+    13567
+   ],
+   "text_prefix_16b": "`home-wiki-sessi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13636,
+    13651
+   ],
+   "text_prefix_16b": "`# Environment`."
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13742,
+    13755
+   ],
+   "text_prefix_16b": "`LLM_WIKI.md` co"
+  },
+  {
+   "hpath": "LLM_WIKI \u2014 root contract/Agent context/Conventions",
+   "kind": "heading",
+   "span": [
+    13804,
+    13819
+   ],
+   "text_prefix_16b": "### Conventions\n"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    13823,
+    13834
+   ],
+   "text_prefix_16b": "`SCHEMA.md` gove"
+  },
+  {
+   "info": {
+    "info_string": "bash"
+   },
+   "kind": "fence",
+   "span": [
+    14030,
+    14323
+   ],
+   "text_prefix_16b": "```bash\n  obsidi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14369,
+    14397
+   ],
+   "text_prefix_16b": "`rg '^descriptio"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14422,
+    14436
+   ],
+   "text_prefix_16b": "`description:` f"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14452,
+    14471
+   ],
+   "text_prefix_16b": "`type/domain-ind"
+  },
+  {
+   "hpath": "LLM_WIKI \u2014 root contract/Agent context/Obsidian",
+   "kind": "heading",
+   "span": [
+    14480,
+    14492
+   ],
+   "text_prefix_16b": "### Obsidian\n\nVa"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14534,
+    14543
+   ],
+   "text_prefix_16b": "`foreign`. (`ses"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14546,
+    14556
+   ],
+   "text_prefix_16b": "`sessions` is no"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14577,
+    14597
+   ],
+   "text_prefix_16b": "`home-wiki-sessi"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14635,
+    14647
+   ],
+   "text_prefix_16b": "`FLEET.base`, `T"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14649,
+    14661
+   ],
+   "text_prefix_16b": "`TASKS.base`, `D"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    14663,
+    14679
+   ],
+   "text_prefix_16b": "`DECISIONS.base`"
+  }
+ ],
+ "schema": "gt-v2"
+}

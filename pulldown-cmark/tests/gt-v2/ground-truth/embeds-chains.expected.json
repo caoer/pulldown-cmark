@@ -1,0 +1,188 @@
+{
+ "file": "adversarial/embeds-chains.md",
+ "nodes": [
+  {
+   "info": {
+    "target": "bof"
+   },
+   "kind": "embed",
+   "span": [
+    0,
+    8
+   ],
+   "text_prefix_16b": "![[bof]] embed a"
+  },
+  {
+   "info": {
+    "target": "a"
+   },
+   "kind": "embed",
+   "span": [
+    35,
+    41
+   ],
+   "text_prefix_16b": "![[a]]![[b]]![[c"
+  },
+  {
+   "info": {
+    "target": "b"
+   },
+   "kind": "embed",
+   "span": [
+    41,
+    47
+   ],
+   "text_prefix_16b": "![[b]]![[c]]\nDou"
+  },
+  {
+   "info": {
+    "target": "c"
+   },
+   "kind": "embed",
+   "span": [
+    47,
+    53
+   ],
+   "text_prefix_16b": "![[c]]\nDouble ba"
+  },
+  {
+   "info": {
+    "target": "double"
+   },
+   "kind": "embed",
+   "span": [
+    67,
+    78
+   ],
+   "text_prefix_16b": "![[double]] keep"
+  },
+  {
+   "info": {
+    "target": "spaced"
+   },
+   "kind": "wikilink",
+   "span": [
+    113,
+    123
+   ],
+   "text_prefix_16b": "[[spaced]] is a "
+  },
+  {
+   "info": {
+    "target": "link"
+   },
+   "kind": "wikilink",
+   "span": [
+    158,
+    166
+   ],
+   "text_prefix_16b": "[[link]]![[embed"
+  },
+  {
+   "info": {
+    "target": "embed"
+   },
+   "kind": "embed",
+   "span": [
+    166,
+    176
+   ],
+   "text_prefix_16b": "![[embed]] adjac"
+  },
+  {
+   "info": {
+    "alias": "x|y",
+    "target": "a"
+   },
+   "kind": "embed",
+   "span": [
+    224,
+    234
+   ],
+   "text_prefix_16b": "![[a|x|y]]\nImage"
+  },
+  {
+   "info": {
+    "target": "real"
+   },
+   "kind": "embed",
+   "span": [
+    277,
+    286
+   ],
+   "text_prefix_16b": "![[real]]\nFragme"
+  },
+  {
+   "info": {
+    "heading": "Head",
+    "target": "a"
+   },
+   "kind": "embed",
+   "span": [
+    298,
+    309
+   ],
+   "text_prefix_16b": "![[a#Head]] ![[a"
+  },
+  {
+   "info": {
+    "block": "blk",
+    "target": "a"
+   },
+   "kind": "embed",
+   "span": [
+    310,
+    321
+   ],
+   "text_prefix_16b": "![[a#^blk]] ![[a"
+  },
+  {
+   "info": {
+    "alias": "alias",
+    "heading": "Head",
+    "target": "a"
+   },
+   "kind": "embed",
+   "span": [
+    322,
+    339
+   ],
+   "text_prefix_16b": "![[a#Head|alias]"
+  },
+  {
+   "info": {
+    "alias": "alias",
+    "target": "a"
+   },
+   "kind": "embed",
+   "span": [
+    340,
+    352
+   ],
+   "text_prefix_16b": "![[a|alias]]\nUni"
+  },
+  {
+   "info": {
+    "target": "\u7b14\u8bb0"
+   },
+   "kind": "embed",
+   "span": [
+    368,
+    379
+   ],
+   "text_prefix_16b": "![[\u7b14\u8bb0]]\nNo t"
+  },
+  {
+   "info": {
+    "target": "eof"
+   },
+   "kind": "embed",
+   "span": [
+    423,
+    431
+   ],
+   "text_prefix_16b": "![[eof]]"
+  }
+ ],
+ "schema": "gt-v2"
+}

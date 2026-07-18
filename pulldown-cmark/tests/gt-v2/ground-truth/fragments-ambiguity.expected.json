@@ -1,0 +1,292 @@
+{
+ "file": "adversarial/fragments-ambiguity.md",
+ "nodes": [
+  {
+   "hpath": "Fragment ambiguity",
+   "kind": "heading",
+   "span": [
+    0,
+    20
+   ],
+   "text_prefix_16b": "# Fragment ambig"
+  },
+  {
+   "info": {
+    "heading": "Head",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    45,
+    58
+   ],
+   "text_prefix_16b": "[[Page#Head]] an"
+  },
+  {
+   "info": {
+    "block": "blk",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    78,
+    91
+   ],
+   "text_prefix_16b": "[[Page#^blk]]\n\nM"
+  },
+  {
+   "info": {
+    "heading": "A#B",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    112,
+    124
+   ],
+   "text_prefix_16b": "[[Page#A#B]] and"
+  },
+  {
+   "info": {
+    "heading": "#H",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    141,
+    152
+   ],
+   "text_prefix_16b": "[[Page##H]]\n\nMix"
+  },
+  {
+   "info": {
+    "heading": "Head#^blk",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    179,
+    197
+   ],
+   "text_prefix_16b": "[[Page#Head#^blk"
+  },
+  {
+   "info": {
+    "heading": "",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    213,
+    222
+   ],
+   "text_prefix_16b": "[[Page#]] and [["
+  },
+  {
+   "info": {
+    "block": "",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    227,
+    237
+   ],
+   "text_prefix_16b": "[[Page#^]] and ["
+  },
+  {
+   "info": {
+    "heading": "Head",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    242,
+    251
+   ],
+   "text_prefix_16b": "[[#Head]] and [["
+  },
+  {
+   "info": {
+    "block": "blk",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    256,
+    265
+   ],
+   "text_prefix_16b": "[[#^blk]]\n\nAlias"
+  },
+  {
+   "info": {
+    "alias": "alias one",
+    "heading": "Head",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    276,
+    299
+   ],
+   "text_prefix_16b": "[[Page#Head|alia"
+  },
+  {
+   "info": {
+    "alias": "alias two",
+    "block": "blk",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    304,
+    327
+   ],
+   "text_prefix_16b": "[[Page#^blk|alia"
+  },
+  {
+   "info": {
+    "target": "Page^glued"
+   },
+   "kind": "wikilink",
+   "span": [
+    348,
+    362
+   ],
+   "text_prefix_16b": "[[Page^glued]] k"
+  },
+  {
+   "info": {
+    "heading": "head with spaces",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    401,
+    426
+   ],
+   "text_prefix_16b": "[[Page#head with"
+  },
+  {
+   "info": {
+    "heading": "h/with/slash",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    437,
+    458
+   ],
+   "text_prefix_16b": "[[Page#h/with/sl"
+  },
+  {
+   "info": {
+    "heading": "\u6807\u9898",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    477,
+    492
+   ],
+   "text_prefix_16b": "[[Page#\u6807\u9898]] "
+  },
+  {
+   "info": {
+    "heading": "Head",
+    "target": "\u7b14\u8bb0"
+   },
+   "kind": "wikilink",
+   "span": [
+    512,
+    527
+   ],
+   "text_prefix_16b": "[[\u7b14\u8bb0#Head]]\n"
+  },
+  {
+   "info": {
+    "heading": "HEAD",
+    "target": "page"
+   },
+   "kind": "wikilink",
+   "span": [
+    543,
+    556
+   ],
+   "text_prefix_16b": "[[page#HEAD]] an"
+  },
+  {
+   "info": {
+    "block": "UPPER-1",
+    "target": "Page"
+   },
+   "kind": "wikilink",
+   "span": [
+    572,
+    589
+   ],
+   "text_prefix_16b": "[[Page#^UPPER-1]"
+  },
+  {
+   "info": {
+    "target": "|alias-only"
+   },
+   "kind": "wikilink",
+   "span": [
+    613,
+    628
+   ],
+   "text_prefix_16b": "[[|alias-only]] "
+  },
+  {
+   "info": {
+    "heading": "",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    633,
+    638
+   ],
+   "text_prefix_16b": "[[#]] and [[#^]]"
+  },
+  {
+   "info": {
+    "block": "",
+    "target": ""
+   },
+   "kind": "wikilink",
+   "span": [
+    643,
+    649
+   ],
+   "text_prefix_16b": "[[#^]]\n\nEmbedded"
+  },
+  {
+   "info": {
+    "heading": "A#B",
+    "target": "Page"
+   },
+   "kind": "embed",
+   "span": [
+    667,
+    680
+   ],
+   "text_prefix_16b": "![[Page#A#B]] an"
+  },
+  {
+   "info": {
+    "alias": "al",
+    "block": "blk",
+    "target": "Page"
+   },
+   "kind": "embed",
+   "span": [
+    685,
+    702
+   ],
+   "text_prefix_16b": "![[Page#^blk|al]"
+  }
+ ],
+ "schema": "gt-v2"
+}

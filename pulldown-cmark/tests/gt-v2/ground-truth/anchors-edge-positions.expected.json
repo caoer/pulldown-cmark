@@ -1,0 +1,245 @@
+{
+ "file": "adversarial/anchors-edge-positions.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "title",
+     "fake"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    92
+   ],
+   "text_prefix_16b": "---\ntitle: ancho"
+  },
+  {
+   "hpath": "Anchors at edge positions ^on-heading",
+   "kind": "heading",
+   "span": [
+    94,
+    133
+   ],
+   "text_prefix_16b": "# Anchors at edg"
+  },
+  {
+   "info": {
+    "id": "on-heading"
+   },
+   "kind": "anchor",
+   "span": [
+    122,
+    133
+   ],
+   "text_prefix_16b": "^on-heading\n\nNor"
+  },
+  {
+   "info": {
+    "id": "plain"
+   },
+   "kind": "anchor",
+   "span": [
+    164,
+    170
+   ],
+   "text_prefix_16b": "^plain\n\nTwo on o"
+  },
+  {
+   "info": {
+    "id": "tail-yes"
+   },
+   "kind": "anchor",
+   "span": [
+    216,
+    225
+   ],
+   "text_prefix_16b": "^tail-yes\n\nTrail"
+  },
+  {
+   "info": {
+    "id": "tabbed"
+   },
+   "kind": "anchor",
+   "span": [
+    282,
+    289
+   ],
+   "text_prefix_16b": "^tabbed\n\nCharset"
+  },
+  {
+   "info": {
+    "id": "UPPER-Case-1"
+   },
+   "kind": "anchor",
+   "span": [
+    323,
+    336
+   ],
+   "text_prefix_16b": "^UPPER-Case-1\n\nL"
+  },
+  {
+   "info": {
+    "id": "-"
+   },
+   "kind": "anchor",
+   "span": [
+    353,
+    355
+   ],
+   "text_prefix_16b": "^-\n\nUnderscore b"
+  },
+  {
+   "info": {
+    "id": "in-list"
+   },
+   "kind": "anchor",
+   "span": [
+    502,
+    510
+   ],
+   "text_prefix_16b": "^in-list\n- [ ] t"
+  },
+  {
+   "info": {
+    "checked": false,
+    "depth": 1
+   },
+   "kind": "task",
+   "span": [
+    511,
+    535
+   ],
+   "text_prefix_16b": "- [ ] task item "
+  },
+  {
+   "info": {
+    "id": "in-task"
+   },
+   "kind": "anchor",
+   "span": [
+    527,
+    535
+   ],
+   "text_prefix_16b": "^in-task\n  - nes"
+  },
+  {
+   "info": {
+    "id": "in-nested-list"
+   },
+   "kind": "anchor",
+   "span": [
+    557,
+    572
+   ],
+   "text_prefix_16b": "^in-nested-list\n"
+  },
+  {
+   "info": {
+    "id": "in-quote"
+   },
+   "kind": "anchor",
+   "span": [
+    587,
+    596
+   ],
+   "text_prefix_16b": "^in-quote\n\n> [!n"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    598,
+    680
+   ],
+   "text_prefix_16b": "> [!note] callou"
+  },
+  {
+   "info": {
+    "id": "in-callout-body"
+   },
+   "kind": "anchor",
+   "span": [
+    664,
+    680
+   ],
+   "text_prefix_16b": "^in-callout-body"
+  },
+  {
+   "kind": "table",
+   "span": [
+    682,
+    759
+   ],
+   "text_prefix_16b": "| a | b |\n|---|-"
+  },
+  {
+   "info": {
+    "id": "in-table-row"
+   },
+   "kind": "anchor",
+   "span": [
+    715,
+    728
+   ],
+   "text_prefix_16b": "^in-table-row |\n"
+  },
+  {
+   "info": {
+    "id": "after-table"
+   },
+   "kind": "anchor",
+   "span": [
+    761,
+    773
+   ],
+   "text_prefix_16b": "^after-table\n\n``"
+  },
+  {
+   "info": {
+    "info_string": ""
+   },
+   "kind": "fence",
+   "span": [
+    775,
+    807
+   ],
+   "text_prefix_16b": "```\nfence body ^"
+  },
+  {
+   "info": {
+    "id": "right-after-fence-close"
+   },
+   "kind": "anchor",
+   "span": [
+    808,
+    832
+   ],
+   "text_prefix_16b": "^right-after-fen"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    846,
+    860
+   ],
+   "text_prefix_16b": "`^not-in-code` t"
+  },
+  {
+   "info": {
+    "id": "after-code"
+   },
+   "kind": "anchor",
+   "span": [
+    877,
+    888
+   ],
+   "text_prefix_16b": "^after-code\n"
+  }
+ ],
+ "schema": "gt-v2"
+}
