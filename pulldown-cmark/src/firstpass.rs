@@ -15,7 +15,7 @@ use crate::{
     scanners::*,
     strings::CowStr,
     tree::{Tree, TreeIndex},
-    ContainerKind, HeadingLevel, MetadataBlockKind, Options,
+    Callout, ContainerKind, HeadingLevel, MetadataBlockKind, Options,
 };
 
 /// Runs the first pass, which resolves the block structure of the document,
@@ -227,19 +227,42 @@ impl<'a, 'b> FirstPass<'a, 'b> {
                     return after_marker_index + n;
                 }
             } else if line_start.scan_blockquote_marker() {
-                let kind = if self.options.contains(Options::ENABLE_GFM) {
-                    line_start.scan_blockquote_tag()
-                } else {
-                    None
-                };
+                let mut kind = None;
+                let mut callout = None;
+                // whether the tag scan consumed the rest of the head line
+                let mut tag_at_eol = false;
+                if self.options.contains(Options::ENABLE_OBSIDIAN_CALLOUTS) {
+                    // The Obsidian scan accepts a superset of the GFM tag
+                    // syntax (arbitrary types, fold markers, titles, extra
+                    // whitespace), so it runs first and the GFM kind is
+                    // derived from it under exactly the GFM conditions.
+                    if let Some(scan) = line_start.scan_obsidian_callout_tag() {
+                        let ty = &self.text[start_ix + scan.type_start..start_ix + scan.type_end];
+                        if self.options.contains(Options::ENABLE_GFM)
+                            && scan.fold.is_none()
+                            && scan.consumed_to_eol
+                            && !scan.leading_ws
+                        {
+                            kind = blockquote_kind_from_tag(ty.as_bytes());
+                        }
+                        callout = Some(self.allocs.allocate_callout(Callout {
+                            kind: ty.into(),
+                            fold: scan.fold,
+                        }));
+                        tag_at_eol = scan.consumed_to_eol;
+                    }
+                } else if self.options.contains(Options::ENABLE_GFM) {
+                    kind = line_start.scan_blockquote_tag();
+                    tag_at_eol = kind.is_some();
+                }
                 self.finish_list(start_ix);
                 self.tree.append(Item {
                     start: container_start,
                     end: 0, // will get set later
-                    body: ItemBody::BlockQuote(kind),
+                    body: ItemBody::BlockQuote(kind, callout),
                 });
                 self.tree.push();
-                if kind.is_some() {
+                if tag_at_eol {
                     // blockquote tag leaves us at the end of the line
                     // we need to scan through all the container syntax for the next line
                     // and break out if we can't re-scan all of them

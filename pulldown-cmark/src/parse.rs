@@ -40,8 +40,8 @@ use crate::{
     scanners::*,
     strings::CowStr,
     tree::{Tree, TreeIndex},
-    Alignment, BlockQuoteKind, CodeBlockKind, ContainerKind, Event, HeadingLevel, LinkType,
-    MetadataBlockKind, Options, Tag, TagEnd, WikiLinkFragment, WikiLinkTarget,
+    Alignment, BlockQuoteKind, Callout, CodeBlockKind, ContainerKind, Event, HeadingLevel,
+    LinkType, MetadataBlockKind, Options, Tag, TagEnd, WikiLinkFragment, WikiLinkTarget,
 };
 
 // Allowing arbitrary depth nested parentheses inside link destinations
@@ -119,7 +119,7 @@ pub(crate) enum ItemBody {
     FencedCodeBlock(CowIndex),
     IndentCodeBlock,
     HtmlBlock,
-    BlockQuote(Option<BlockQuoteKind>),
+    BlockQuote(Option<BlockQuoteKind>, Option<CalloutIndex>),
     Container(u8, ContainerKind, CowIndex), // (fence length, specific renderer, descriptor used in renderer)
     List(bool, u8, u64),                    // is_tight, list character, list start index
     ListItem(usize),                        // indent level
@@ -2095,6 +2095,11 @@ pub(crate) struct AlignmentIndex(usize);
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub(crate) struct HeadingIndex(NonZeroUsize);
 
+// NonZeroUsize so that Option<CalloutIndex> keeps ItemBody within its
+// 16-byte size assertion (same trick as HeadingIndex).
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+pub(crate) struct CalloutIndex(NonZeroUsize);
+
 #[derive(Clone)]
 pub(crate) struct Allocations<'a> {
     pub refdefs: RefDefs<'a>,
@@ -2109,6 +2114,7 @@ pub(crate) struct Allocations<'a> {
     cows: Vec<CowStr<'a>>,
     alignments: Vec<Vec<Alignment>>,
     headings: Vec<HeadingAttributes<'a>>,
+    callouts: Vec<Callout<'a>>,
 }
 
 /// Used by the heading attributes extension.
@@ -2165,6 +2171,7 @@ impl<'a> Allocations<'a> {
             cows: Vec::new(),
             alignments: Vec::new(),
             headings: Vec::new(),
+            callouts: Vec::new(),
         }
     }
 
@@ -2202,8 +2209,27 @@ impl<'a> Allocations<'a> {
         HeadingIndex(ix_nonzero)
     }
 
+    pub fn allocate_callout(&mut self, callout: Callout<'a>) -> CalloutIndex {
+        let ix = self.callouts.len();
+        self.callouts.push(callout);
+        // This won't panic. `self.callouts.len()` can't be `usize::MAX` since
+        // such a long Vec cannot fit in memory.
+        let ix_nonzero = NonZeroUsize::new(ix.wrapping_add(1)).expect("too many callouts");
+        CalloutIndex(ix_nonzero)
+    }
+
     pub fn take_cow(&mut self, ix: CowIndex) -> CowStr<'a> {
         core::mem::replace(&mut self.cows[ix.0], "".into())
+    }
+
+    pub fn take_callout(&mut self, ix: CalloutIndex) -> Callout<'a> {
+        core::mem::replace(
+            &mut self.callouts[ix.0.get() - 1],
+            Callout {
+                kind: "".into(),
+                fold: None,
+            },
+        )
     }
 
     pub fn take_link(
@@ -2439,7 +2465,7 @@ fn body_to_tag_end(body: &ItemBody) -> TagEnd {
         ItemBody::Heading(level, _) => TagEnd::Heading(level),
         ItemBody::IndentCodeBlock | ItemBody::FencedCodeBlock(..) => TagEnd::CodeBlock,
         ItemBody::Container(_, kind, _) => TagEnd::ContainerBlock(kind),
-        ItemBody::BlockQuote(kind) => TagEnd::BlockQuote(kind),
+        ItemBody::BlockQuote(kind, _) => TagEnd::BlockQuote(kind),
         ItemBody::HtmlBlock => TagEnd::HtmlBlock,
         ItemBody::List(_, c, _) => {
             let is_ordered = c == b'.' || c == b')';
@@ -2526,9 +2552,9 @@ fn item_to_event<'a>(item: Item, text: &'a str, allocs: &mut Allocations<'a>) ->
         }
         ItemBody::IndentCodeBlock => Tag::CodeBlock(CodeBlockKind::Indented),
         ItemBody::Container(_, kind, cow_ix) => Tag::ContainerBlock(kind, allocs.take_cow(cow_ix)),
-        ItemBody::BlockQuote(kind) => Tag::BlockQuote {
+        ItemBody::BlockQuote(kind, callout) => Tag::BlockQuote {
             kind,
-            callout: None,
+            callout: callout.map(|ix| allocs.take_callout(ix)),
         },
         ItemBody::List(_, c, listitem_start) => {
             if c == b'.' || c == b')' {
