@@ -1,0 +1,6 @@
+file	sha256	provenance	basis	notes
+AMENDMENT.md	7e68b9cdf106f910ef8d49f7626de1f85fc65f8e5776b6a0a37deff6053a81a7	amendment-1@18-02-meridian-rs (worker 7e02d38e)	spec-h:1.3-erratum@2026-07-18	audit ledger: hit list, classification, overlay rule
+ground-truth/anchors-edge-positions.expected.json	c88c07c3e3a7daafe041ff8630474e9db4647a413e0a53293867e78961f3053d	amendment-1@18-02-meridian-rs (worker 7e02d38e)	spec-h:1.3-erratum@2026-07-18	full replacement: +anchor ^on-callout-head [627,643] (probe w02a/b; parse-level precedent a08/a09)
+ground-truth/callouts-fold-title.expected.json	8d399df7722926a677b0ad3ef0e5e12bfb5a7ada319e1b27a7a52f680fb7549b	amendment-1@18-02-meridian-rs (worker 7e02d38e)	spec-h:1.3-erratum@2026-07-18	full replacement: +anchor ^title-anchor [468,481] (probe v04/w01/w03)
+tools/rederive.py	b8143cc0dcaa811cd9f181ab33b2f1bc89c10a2a9c29723411fb9818b70a6a6c	amendment-1@18-02-meridian-rs (worker 7e02d38e)	spec-h:1.3-erratum@2026-07-18	frozen deriver + one rule change; lane-drift guard
+tools/verify-overlay.py	cadbe9f5e744e0eee2f14a9e4c93461a0b59e99a69e4319869f1d0dce936cde8	amendment-1@18-02-meridian-rs (worker 7e02d38e)	spec-h:1.3-erratum@2026-07-18	runs frozen verify.py on the overlay view
