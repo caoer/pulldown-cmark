@@ -14,12 +14,12 @@ its sections stabilize. The v1 pack (parser-bench `fixtures/`, frozen
 
 ```
 corpus/        5 inputs copied verbatim from the live wiki (provenance in MANIFEST)
-adversarial/   10 synthesized edge files (one ambiguity family each)
-               + 2 Stream H probe inputs carried in verbatim (zzprobe-anchors-*)
+adversarial/   11 synthesized edge files (one ambiguity family each)
+               + 3 Stream H probe inputs carried in verbatim (zzprobe-anchors-*)
 ground-truth/  <stem>.expected.json — one per fixture, every fixture covered
 tools/         derive.py (reproduces expected outputs), verify.py (mechanical invariants)
 MANIFEST.tsv   file, sha256, provenance, derivation basis, notes
-OPEN-QUESTIONS.md  dialect rulings pending Stream H; re-derive on resolution
+OPEN-QUESTIONS.md  ledger vs the (complete) Stream H dialect spec
 ```
 
 ## Expected-output schema
@@ -41,6 +41,14 @@ and per-kind `info` payloads. Deltas from the v1 ground-truth law:
 - **D3 — `anchor` nodes gain `info.id`** (the id without the caret), asserting
   the fork's `Event::BlockAnchor(CowStr)` payload. `verify.py` enforces
   `info.id == raw[span.start+1 : span.end]`.
+- **D4 — callout `info.type` is the NORMALIZED type** (dialect spec §2.2:
+  pipe-split, trim, lowercase, whitespace-runs→dash) and `info.metadata`
+  carries the verbatim post-pipe string when a pipe was written. Raw head
+  text is recoverable from the span. v1 GT stored the raw matched type.
+- **D5 — anchor emission follows the dialect position rules** (spec §1.2–1.3):
+  paragraph-end only, trailing whitespace invalidates, table-cell tails
+  register, callout head-line tails and comment interiors never register.
+  v1 GT's line-tail rule over-fires; its anchor rows are lane artifacts.
 
 Span laws, ordering law (`span.start` asc, ties `span.end` desc — container
 before contained), prefix law, hpath law: wire-contract v1 §2/§5.2,
@@ -56,13 +64,11 @@ nodes.
 - `+nested-probe@eea0453` — D2 nodes added with byte ranges from a pulldown
   nested-BlockQuote offset probe against the fork at `eea0453` (see
   `tools/derive.py` DELTAS, which records every added node).
-- `spec-h:<section>` — derived from Stream H dialect-conformance evidence
-  (probe-confirmed vs live Obsidian); supersedes lane basis as sections
-  stabilize. First applied: `spec-h:anchors@feed-1` — paragraph-end-only,
-  trailing-whitespace-invalidates, table-cell-tails-register (see
-  OPEN-QUESTIONS.md Resolved). Where no spec exists yet, lane behavior is
-  the documented fallback and every known divergence risk is ledgered in
-  OPEN-QUESTIONS.md.
+- `spec-h:<section>` — derived from the Stream H dialect-conformance spec
+  (`results/obsidian-dialect-conformance.md`, COMPLETE, probe-confirmed vs
+  live Obsidian 1.12.7); supersedes lane behavior everywhere it rules.
+  Every formerly-open divergence is settled in OPEN-QUESTIONS.md Resolved;
+  what stays lane-based is behavior the spec confirmed.
 
 Nothing is invented from memory: every span either came out of a parser run
 (lane binary or pulldown probe) and was re-verified by byte-slicing, or does

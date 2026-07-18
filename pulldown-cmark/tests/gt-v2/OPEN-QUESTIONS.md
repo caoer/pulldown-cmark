@@ -1,68 +1,47 @@
-# GT-v2 open questions — dialect rulings needed before freeze
+# GT-v2 open questions — ledger against the Stream H dialect spec
 
-Each entry records the ruling the pack currently encodes (lane basis) and the
-question queued on Stream H (obsidian-dialect-conformance). When Stream H's
-spec answers one, the affected expected outputs are re-derived, the MANIFEST
-basis column flips to `spec-h:<section>`, and the entry moves to Resolved.
-This list doubles as Stream H's adversarial-candidate feed (task coupling).
+The Stream H dialect-conformance spec is COMPLETE
+(`year=2026/month=07/18-02-meridian-rs/results/obsidian-dialect-conformance.md`,
+sections 1–6, every claim `[doc]`/`[probe]`/`[source]`-tagged). All fixture
+expectations in this pack now derive from it wherever it rules; MANIFEST
+basis columns cite the spec section per fixture. This file records what
+remains open and how each formerly-open ruling was settled.
 
-| # | Fixture | Construct | Ruling encoded (lane) | Question for Stream H |
-|---|---------|-----------|----------------------|----------------------|
-| OQ-1 | crlf-mixed | `---\r\n` frontmatter | ~~not a node~~ → **RESOLVED, flipped** (feed-2) | — |
-| OQ-2 | embeds-contexts, kitchen-sink | `![[x]]` / `[[x]]` inside `%% %%` | extracted (comments don't mask inline nodes) | Obsidian hides comment content — are refs inside comments live (backlinks/resolution)? |
-| OQ-3 | anchors-edge-positions | `^spaced   ` trailing whitespace after id | ~~anchor~~ → **RESOLVED, flipped** | — |
-| OQ-4 | anchors-edge-positions | `^-` lone-hyphen id | anchor (charset `[A-Za-z0-9-]+` admits it) | is `^-` a valid Obsidian block id? |
-| OQ-5 | callouts-fold-title | `[!note]-Title-glued` | ~~callout, fold `-`~~ → **RESOLVED, flipped harder** (feed-2): not a callout at all | — |
-| OQ-6 | callouts-fold-title | `[!note] - spaced dash` | no fold; `- …` is title text | confirm: fold marker must be glued to `]` (adjacent to the OQ-5 ruling, still wants explicit probe) |
-| OQ-7 | callouts-type-charset | `[!注意]` unicode type | ~~not a callout~~ → **RESOLVED, flipped** (feed-2): callout, type charset is anything-but-`]` | — |
-| OQ-8 | embeds-chains | `![[]]` empty target | no node | does Obsidian tokenize an empty embed? |
-| OQ-9 | fragments-ambiguity | `[[Page#Head#^blk]]` | heading `"Head#^blk"` (split at first `#`; `#^` only checked at that split) | does a trailing `#^blk` inside a subpath act as a block ref? |
-| OQ-10 | fragments-ambiguity, kitchen-sink | `[[Page#A#B]]` | heading `"A#B"` (parser keeps the raw fragment; names-contract: split at first `#`, GT-faithful) | confirm parser-level raw fragment is right; subpath resolution algebra is rung-2 (`resolve`) territory |
-| OQ-11 | fragments-ambiguity | `[[]]`, `[[|alias-only]]` | `[[|alias-only]]` **RESOLVED** (feed-2): tokenized, target `""` + alias. Bare `[[]]` still encoded as no-node | does Obsidian tokenize bare `[[]]`? |
-| OQ-12 | fragments-ambiguity | `[[#]]`, `[[#^]]` | node with empty target + empty heading/block | match Obsidian's tokenizer? |
-| OQ-13 | callouts-nested, kitchen-sink | nested callout span start | at the innermost `>` of the head line (vanilla pulldown nested-BlockQuote ranges, probe @eea0453) | fork must confirm the same range convention once callout events land |
-| OQ-14 | anchors-edge-positions, callouts-fold-title | `^id` at tail of a callout head line | anchor node emitted | what does the block ref address in Obsidian — the head line or the whole callout? (rung-2 resolve concern; node emission itself uncontested) |
-| OQ-15 | callouts-type-charset | `[!]` empty type, `[!unclosed` | not callouts | feed-2's anything-but-`]` charset is silent on the empty type and the unclosed head — confirm both stay non-callouts |
-| OQ-16 | batch2-pipe-escape | `[!note|meta]` pipe metadata | callout, `info.type` = pre-pipe part; metadata not captured | what shape captures the metadata — new `info` key by wire-contract amendment, or dropped at event level? |
-| OQ-17 | batch2-pipe-escape | `[[Page\|esc]]` backslash disposition | split confirmed (feed-2); lane encodes target `"Page\"`, alias `"esc-alias"` — backslash left in target | does Obsidian's target strip the backslash (`Page`, escape consumed)? almost certainly yes — awaiting spec text to flip |
+## Still open
 
-## Resolved
+| # | Concern | Status |
+|---|---------|--------|
+| OQ-13 | Nested-callout span start convention: encoded at the innermost `>` of the head line (vanilla pulldown nested-BlockQuote ranges, probe @eea0453) | fork-side — confirm when callout events land; not a dialect question |
+| OQ-18 | Callout `info.type` is encoded NORMALIZED (spec §2.2: pipe-split → trim → lowercase → ws-runs→dash; metadata verbatim in `info.metadata`). Raw head text is recoverable from the span. The names-contract `Callout { kind }` predates this ruling | fork-side decision: parser normalizes vs post-pass; GT asserts the normalized value either way — flagged to fork leader |
+| spec §6 | Stream H's own remaining unknowns (7 items: `getFirstLinkpathDest` tie-break, fold `-` initial DOM state, etc.) | resolution/render-level; none affect node emission in this pack — future GT-v3 candidates |
 
-Per **spec-h:anchors@feed-1** (2b24e94a as-found message, probe-confirmed vs
-Obsidian 1.12.7; probe inputs carried in as `zzprobe-anchors-a/-b.md`):
+## Resolved (all rulings per spec section, probe-confirmed)
 
-- **OQ-3 — flipped.** Trailing whitespace after `^id` invalidates the anchor.
-  `^spaced` node removed from anchors-edge-positions; probe P02 is the
-  canonical negative.
-- **NEW LAW — paragraph-end only.** Anchors fire only at the end of a
-  paragraph's inline text; interior line-tails of multi-line paragraphs do
-  not register (probe P07 negative / P08 positive). Lane over-fires; corpus
-  fixtures audited — zero corpus anchors affected.
-- **NEW LAW — table-cell tails register** (id attaches to the whole table;
-  attachment is rung-2 resolve territory, node emission is asserted here).
-  Probe P15 + `^in-table-row` positives; mid-cell `^not-cell-tail` negative.
-- Charset confirmed `[a-zA-Z0-9-]`; whitespace required before `^` (tab
-  counts); escaped `\^` and doubled `^^` never fire; code contexts never
-  fire; typed case preserved in the event id (blocks-map lowercasing is a
-  resolution-layer concern, not an event concern).
+| # | Construct | Final ruling encoded |
+|---|-----------|---------------------|
+| OQ-1 | CRLF frontmatter | **flipped** — parses (LAW-0: line-ending normalization precedes all parsing); node added, span raw-byte with CRLF clipped |
+| OQ-2 | refs/anchors inside `%%…%%` | **split** (§4.4/§1.3) — links+embeds ARE extracted (live for cache); anchors are NOT; negative `^in-comment-tail` fixture added |
+| OQ-3 | trailing whitespace after `^id` | **flipped** — invalidates (§1.2, probes a02/c04 incl. tab) |
+| OQ-4 | `^-` lone-hyphen id | **confirmed** — valid (§1.1) |
+| OQ-5 | `[!note]-Title-glued` | **flipped** — not a callout at all (§2.1: after fold char must be `\s` or EOL); also kills `[!note]junk`, `[!faq]+-` — negatives added |
+| OQ-6 | `[!note] - spaced dash` | **confirmed** — callout, no fold, title `- …` (§2.1) |
+| OQ-7 | `[!注意]` unicode type | **flipped** — callout; type charset is anything-except-`]`, then normalized (§2.1–2.2) |
+| OQ-8 | `![[]]` | **confirmed** — no node (§3.1) |
+| OQ-9 | `[[P#Head#^blk]]` | **ruled** (resolution side) — resolves NULL, block refs only as sole segment (§5.3); parser raw-fragment convention unaffected |
+| OQ-10 | `[[P#A#B]]` raw fragment | **confirmed** — cache stores raw string; split-at-first-`#` with raw remainder matches (§4.1) |
+| OQ-11 | degenerates | **split** — `[[]]` no node (confirmed); `[[|alias-only]]` tokenizes with link = raw `"|alias-only"`, empty path disables alias split (§4.2) |
+| OQ-12 | `[[#]]`, `[[#^]]` | **confirmed** — tokenize with raw link text, resolve NULL (§4.1) |
+| OQ-14 | `^id` on callout head line | **ruled** — head-line tail id is title text, NOT an anchor (§1.3); body-paragraph tail DOES register (attaches to callout section). Head-line anchor nodes removed |
+| OQ-15 | `[!]` empty type, `[!unclosed` | **confirmed** — both plain quotes (§2.1: type needs ≥1 char; recognition needs `]`) |
+| OQ-16 | pipe metadata shape | **resolved** — metadata string verbatim (§2.2); encoded as additive `info.metadata`, present only when a pipe was written |
+| OQ-17 | `[[a\|b]]` backslash | **resolved** — escaped `\|` also splits; link `a`, display `b`, backslash consumed (§4.2) |
 
-Per **spec-h feed-2** (2b24e94a batch #2, probe-confirmed):
+## Laws carried but not (yet) fixture-locked
 
-- **OQ-1 — flipped.** CRLF frontmatter parses (line-ending normalization
-  precedes parse). crlf-mixed gains a frontmatter node; span stays raw-byte
-  with the final `\r\n` clipped per span law.
-- **OQ-5 — flipped harder.** `[!x]-Title` glued fold-title is not a callout
-  at all (not merely fold-less); node removed from callouts-fold-title.
-- **OQ-7 — flipped.** Callout type charset is anything-but-`]`: unicode
-  types, spaces, leading-space types are all callouts (three nodes added).
-- **OQ-11 — half-resolved.** `[[|alias-only]]` tokenizes (target `""`);
-  bare `[[]]` remains open.
-- **NEW — pipe metadata.** `[!type|metadata]` splits at the pipe; `info.type`
-  carries the pre-pipe part (metadata shape → OQ-16).
-- **NEW — escape defeats binding.** `\![[x]]` yields a wikilink, not an
-  embed; `[[a\|b]]` still splits the alias (backslash disposition → OQ-17).
-  Fixture: batch2-pipe-escape.md with positive+negative controls.
-
-Spec skeleton:
-`year=2026/month=07/18-02-meridian-rs/results/obsidian-dialect-conformance.md`
-— remaining OQ rows re-derive as sections land.
+Cache/resolution-level rulings that do not change node emission, recorded
+for rung-2 consumers: duplicate `^id` → LAST wins (§1.4); blocks-map keys
+lowercased, `section.id` typed case (§1.1); own-line id overrides same-block
+inline id (§1.2); embed recursion = depth cap ≈5, not cycle detection —
+treat as small finite cap (§3.3); heading cache stores raw markdown, both
+raw and stripped forms resolve (§5.1); footnote subpaths `#[^id]` exist,
+case-sensitive (§5.4); resolve normalization strip-set verbatim in §5.0.

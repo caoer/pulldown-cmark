@@ -150,17 +150,6 @@
   },
   {
    "info": {
-    "id": "title-anchor"
-   },
-   "kind": "anchor",
-   "span": [
-    468,
-    481
-   ],
-   "text_prefix_16b": "^title-anchor\n\n>"
-  },
-  {
-   "info": {
     "fold": "",
     "type": "empty"
    },

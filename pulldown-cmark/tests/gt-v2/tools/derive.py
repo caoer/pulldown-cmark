@@ -40,8 +40,15 @@ NODE_KEYS = ("kind", "hpath", "span", "text_prefix_16b", "unterminated", "info")
 # ANCHOR_REMOVES drops lane over-fires by info.id; anchor entries in DELTAS
 # using "find" add rule-(c) nodes (span located by unique byte search).
 ANCHOR_REMOVES = {
-    "adversarial/anchors-edge-positions.md": {"spaced"},          # rule (b)
-    "adversarial/zzprobe-anchors-a.md": {"a02", "a07"},           # rules (b),(a)
+    "adversarial/anchors-edge-positions.md": {"spaced", "on-callout-head"},
+    "adversarial/zzprobe-anchors-a.md": {"a02", "a07"},
+    # spec §1.2: c01 = id on paragraph's FIRST line with text after (no-fire);
+    # c04 = trailing tab invalidates
+    "adversarial/zzprobe-anchors-c.md": {"c01", "c04"},
+    # spec §1.3: callout HEAD-line tail id is title text, not an anchor
+    "adversarial/callouts-fold-title.md": {"title-anchor"},
+    # spec §1.3/§4.4: anchors never register inside %%…%% comments
+    "adversarial/embeds-contexts.md": {"in-comment-tail"},
 }
 
 # spec-h feed-2 (2b24e94a batch #2, probe-confirmed):
@@ -50,8 +57,13 @@ ANCHOR_REMOVES = {
 # Lane over-fires both; removed by exact span (audited above in this file's
 # derivation notes; spans printed by the lane run being patched).
 REMOVES_BY_SPAN = {
-    "adversarial/callouts-fold-title.md": [[216, 252]],   # [!note]-Title-glued
-    "adversarial/batch2-pipe-escape.md": [[287, 301]],    # \![[not-bound]] embed
+    # spec §2.1: after the optional fold char there MUST be \s or EOL —
+    # kills [!note]-Title-glued, [!note]junk, [!faq]+-
+    "adversarial/callouts-fold-title.md": [[216, 252], [596, 649], [651, 698]],
+    # batch2: lane nodes replaced by spec-correct DELTAS below —
+    # \![[x]] embed (escape defeats binding), [[Page\|…]] (backslash-consumed
+    # split), [[ padded ]] / [[t#Alpha ]] (trim laws, spec §4.1)
+    "adversarial/batch2-pipe-escape.md": [[287, 301], [181, 200], [415, 427], [441, 453]],
 }
 
 # v2 dialect deltas: nested callouts (lane law: top-level only; v2: every
@@ -83,14 +95,20 @@ DELTAS = {
     # metadata capture shape pending spec text (OQ-16). BQ range 54..109.
     # `\![[x]]`: the escaped bang stays text; the wikilink node replaces the
     # lane's embed (removed above).
+    # spec §2.2 (pipe metadata), §3.1 (escape defeats binding), §4.1 (trim
+    # laws), §4.2 (escaped \| splits, backslash consumed). Raw type
+    # "note|meta" is normalized by normalize_callout below.
     "adversarial/batch2-pipe-escape.md": [
-        {"kind": "callout", "span": [54, 108], "info": {"type": "note", "fold": ""}},
+        {"kind": "callout", "span": [54, 108], "info": {"type": "note|meta", "fold": ""}},
         {"kind": "wikilink", "find": "[[not-bound]]", "info": {"target": "not-bound"}},
+        {"kind": "wikilink", "find": "[[Page\\|esc-alias]]", "info": {"target": "Page", "alias": "esc-alias"}},
+        {"kind": "wikilink", "find": "[[ padded ]]", "info": {"target": "padded"}},
+        {"kind": "wikilink", "find": "[[t#Alpha ]]", "info": {"target": "t", "heading": "Alpha"}},
     ],
-    # spec-h feed-2: alias-only `[[|...]]` IS tokenized (bare `[[]]` still
-    # open, OQ-11 residue).
+    # spec §4.2: [[|alias-only]] tokenizes with link = raw "|alias-only" —
+    # the empty path DISABLES the alias split (no alias key).
     "adversarial/fragments-ambiguity.md": [
-        {"kind": "wikilink", "find": "[[|alias-only]]", "info": {"target": "", "alias": "alias-only"}},
+        {"kind": "wikilink", "find": "[[|alias-only]]", "info": {"target": "|alias-only"}},
     ],
     "adversarial/callouts-nested.md": [
         {"kind": "callout", "span": [50, 80], "info": {"type": "inner", "fold": ""}},
@@ -109,6 +127,19 @@ DELTAS = {
 
 def prefix16(raw: bytes, start: int) -> str:
     return raw[start : start + 16].decode("utf-8", "backslashreplace")
+
+
+def normalize_callout(info: dict) -> dict:
+    """spec §2.2: split raw type at first `|` (right = metadata, verbatim),
+    then trim -> lowercase -> whitespace-runs -> single dash."""
+    import re
+    raw_type = info["type"]
+    out = dict(info)
+    if "|" in raw_type:
+        raw_type, meta = raw_type.split("|", 1)
+        out["metadata"] = meta
+    out["type"] = re.sub(r"\s+", "-", raw_type.strip().lower())
+    return out
 
 
 def derive(rel: str) -> dict:
@@ -152,6 +183,10 @@ def derive(rel: str) -> dict:
                 node["info"] = {"id": pat[1:].decode()}
         node["text_prefix_16b"] = prefix16(raw, node["span"][0])
         nodes.append(node)
+
+    for node in nodes:
+        if node["kind"] == "callout":
+            node["info"] = normalize_callout(node["info"])
 
     nodes.sort(key=lambda n: (n["span"][0], -n["span"][1]))
     return {"file": rel, "schema": "gt-v2", "nodes": nodes}

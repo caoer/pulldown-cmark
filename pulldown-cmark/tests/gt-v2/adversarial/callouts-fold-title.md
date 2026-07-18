@@ -29,3 +29,7 @@
 > [!multi] Title
 > - [ ] task inside callout body ^task-in-callout
 > - [x] done task inside callout
+
+> [!note]junk directly after bracket is a plain quote
+
+> [!faq]+- fold char then junk is a plain quote

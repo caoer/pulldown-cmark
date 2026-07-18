@@ -13,6 +13,7 @@
   {
    "info": {
     "fold": "",
+    "metadata": "meta",
     "type": "note"
    },
    "kind": "callout",
@@ -25,7 +26,7 @@
   {
    "info": {
     "alias": "esc-alias",
-    "target": "Page\\"
+    "target": "Page"
    },
    "kind": "wikilink",
    "span": [
@@ -67,6 +68,40 @@
     343
    ],
    "text_prefix_16b": "![[bound]] binds"
+  },
+  {
+   "info": {
+    "target": "glued-bang"
+   },
+   "kind": "embed",
+   "span": [
+    375,
+    390
+   ],
+   "text_prefix_16b": "![[glued-bang]] "
+  },
+  {
+   "info": {
+    "target": "padded"
+   },
+   "kind": "wikilink",
+   "span": [
+    415,
+    427
+   ],
+   "text_prefix_16b": "[[ padded ]] and"
+  },
+  {
+   "info": {
+    "heading": "Alpha",
+    "target": "t"
+   },
+   "kind": "wikilink",
+   "span": [
+    441,
+    453
+   ],
+   "text_prefix_16b": "[[t#Alpha ]] tra"
   }
  ],
  "schema": "gt-v2"

@@ -160,17 +160,6 @@
   },
   {
    "info": {
-    "id": "on-callout-head"
-   },
-   "kind": "anchor",
-   "span": [
-    627,
-    643
-   ],
-   "text_prefix_16b": "^on-callout-head"
-  },
-  {
-   "info": {
     "id": "in-callout-body"
    },
    "kind": "anchor",

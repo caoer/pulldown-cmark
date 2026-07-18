@@ -229,8 +229,7 @@
   },
   {
    "info": {
-    "alias": "alias-only",
-    "target": ""
+    "target": "|alias-only"
    },
    "kind": "wikilink",
    "span": [

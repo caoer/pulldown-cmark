@@ -13,3 +13,7 @@ Control [[Page|plain-alias]] with a plain pipe
 Escaped bang \![[not-bound]] defeats embed binding
 
 Control ![[bound]] binds as embed
+
+Glued bang word![[glued-bang]] binds as embed
+
+Trimmed [[ padded ]] and fragment [[t#Alpha ]] trailing space

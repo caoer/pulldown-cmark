@@ -25,7 +25,7 @@
   {
    "info": {
     "fold": "",
-    "type": "Custom_Type-2"
+    "type": "custom_type-2"
    },
    "kind": "callout",
    "span": [
@@ -37,7 +37,7 @@
   {
    "info": {
     "fold": "",
-    "type": "NOTE"
+    "type": "note"
    },
    "kind": "callout",
    "span": [
@@ -61,7 +61,7 @@
   {
    "info": {
     "fold": "",
-    "type": "two words"
+    "type": "two-words"
    },
    "kind": "callout",
    "span": [
@@ -73,7 +73,7 @@
   {
    "info": {
     "fold": "",
-    "type": " note"
+    "type": "note"
    },
    "kind": "callout",
    "span": [

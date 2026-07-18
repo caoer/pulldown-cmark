@@ -26,3 +26,7 @@ ken]]
 Inline code `![[in-inline-code-not-a-node]]` stays text.
 
 %% ![[in-comment-still-a-node-question]] %%
+
+%% multi-line comment
+interior anchor never registers ^in-comment-tail
+comment closes %%

@@ -171,6 +171,14 @@
     536
    ],
    "text_prefix_16b": "![[in-comment-st"
+  },
+  {
+   "kind": "comment",
+   "span": [
+    541,
+    629
+   ],
+   "text_prefix_16b": "%% multi-line co"
   }
  ],
  "schema": "gt-v2"
