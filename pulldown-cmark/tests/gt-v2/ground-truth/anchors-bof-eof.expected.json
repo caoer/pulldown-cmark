@@ -1,0 +1,39 @@
+{
+ "file": "adversarial/anchors-bof-eof.md",
+ "nodes": [
+  {
+   "info": {
+    "id": "bof"
+   },
+   "kind": "anchor",
+   "span": [
+    0,
+    4
+   ],
+   "text_prefix_16b": "^bof\n\nFile begin"
+  },
+  {
+   "info": {
+    "id": "mid"
+   },
+   "kind": "anchor",
+   "span": [
+    73,
+    77
+   ],
+   "text_prefix_16b": "^mid\n\nLast line "
+  },
+  {
+   "info": {
+    "id": "eof"
+   },
+   "kind": "anchor",
+   "span": [
+    135,
+    139
+   ],
+   "text_prefix_16b": "^eof"
+  }
+ ],
+ "schema": "gt-v2"
+}

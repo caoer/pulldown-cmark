@@ -1,0 +1,89 @@
+{
+ "file": "adversarial/zzprobe-anchors-b.md",
+ "nodes": [
+  {
+   "kind": "table",
+   "span": [
+    0,
+    40
+   ],
+   "text_prefix_16b": "| c1 | c2 |\n| --"
+  },
+  {
+   "info": {
+    "id": "b01"
+   },
+   "kind": "anchor",
+   "span": [
+    36,
+    40
+   ],
+   "text_prefix_16b": "^b01\n\n```\ncode\n`"
+  },
+  {
+   "info": {
+    "info_string": ""
+   },
+   "kind": "fence",
+   "span": [
+    42,
+    54
+   ],
+   "text_prefix_16b": "```\ncode\n```\n^b0"
+  },
+  {
+   "info": {
+    "id": "b02"
+   },
+   "kind": "anchor",
+   "span": [
+    55,
+    59
+   ],
+   "text_prefix_16b": "^b02\n\n> quote pa"
+  },
+  {
+   "info": {
+    "id": "b03"
+   },
+   "kind": "anchor",
+   "span": [
+    74,
+    78
+   ],
+   "text_prefix_16b": "^b03\n\n- item one"
+  },
+  {
+   "info": {
+    "id": "b04"
+   },
+   "kind": "anchor",
+   "span": [
+    102,
+    106
+   ],
+   "text_prefix_16b": "^b04\n\n# Heading\n"
+  },
+  {
+   "hpath": "Heading",
+   "kind": "heading",
+   "span": [
+    108,
+    117
+   ],
+   "text_prefix_16b": "# Heading\n^b05\n\n"
+  },
+  {
+   "info": {
+    "id": "b05"
+   },
+   "kind": "anchor",
+   "span": [
+    118,
+    122
+   ],
+   "text_prefix_16b": "^b05\n\nParagraph "
+  }
+ ],
+ "schema": "gt-v2"
+}

@@ -1,0 +1,184 @@
+{
+ "file": "corpus/embed-patterns.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "tags",
+     "created"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    65
+   ],
+   "text_prefix_16b": "---\ntags: [domai"
+  },
+  {
+   "hpath": "Embed Patterns",
+   "kind": "heading",
+   "span": [
+    67,
+    83
+   ],
+   "text_prefix_16b": "# Embed Patterns"
+  },
+  {
+   "hpath": "Embed Patterns/Embed Entire Note",
+   "kind": "heading",
+   "span": [
+    140,
+    160
+   ],
+   "text_prefix_16b": "## Embed Entire "
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    162,
+    192
+   ],
+   "text_prefix_16b": "```md\n![[shared-"
+  },
+  {
+   "hpath": "Embed Patterns/Embed a Section",
+   "kind": "heading",
+   "span": [
+    283,
+    301
+   ],
+   "text_prefix_16b": "## Embed a Secti"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    303,
+    341
+   ],
+   "text_prefix_16b": "```md\n![[api-spe"
+  },
+  {
+   "hpath": "Embed Patterns/Embed a Block",
+   "kind": "heading",
+   "span": [
+    412,
+    428
+   ],
+   "text_prefix_16b": "## Embed a Block"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    472,
+    572
+   ],
+   "text_prefix_16b": "```md\nThe retry "
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    600,
+    648
+   ],
+   "text_prefix_16b": "```md\n![[resilie"
+  },
+  {
+   "hpath": "Embed Patterns/Embed Images",
+   "kind": "heading",
+   "span": [
+    722,
+    737
+   ],
+   "text_prefix_16b": "## Embed Images\n"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    739,
+    921
+   ],
+   "text_prefix_16b": "```md\n![[archite"
+  },
+  {
+   "hpath": "Embed Patterns/Embed PDF",
+   "kind": "heading",
+   "span": [
+    923,
+    935
+   ],
+   "text_prefix_16b": "## Embed PDF\n\n``"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    937,
+    1064
+   ],
+   "text_prefix_16b": "```md\n![[rfc-911"
+  },
+  {
+   "hpath": "Embed Patterns/Composition Pattern",
+   "kind": "heading",
+   "span": [
+    1066,
+    1088
+   ],
+   "text_prefix_16b": "## Composition P"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    1133,
+    1383
+   ],
+   "text_prefix_16b": "```md\n# Q2 Engin"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "tip"
+   },
+   "kind": "callout",
+   "span": [
+    1385,
+    1582
+   ],
+   "text_prefix_16b": "> [!tip] Single "
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "warning"
+   },
+   "kind": "callout",
+   "span": [
+    1584,
+    1730
+   ],
+   "text_prefix_16b": "> [!warning] Don"
+  }
+ ],
+ "schema": "gt-v2"
+}

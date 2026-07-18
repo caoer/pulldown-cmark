@@ -1,0 +1,235 @@
+{
+ "file": "adversarial/callouts-fold-title.md",
+ "nodes": [
+  {
+   "hpath": "Fold markers and titles",
+   "kind": "heading",
+   "span": [
+    0,
+    25
+   ],
+   "text_prefix_16b": "# Fold markers a"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    27,
+    56
+   ],
+   "text_prefix_16b": "> [!note]\n> no f"
+  },
+  {
+   "info": {
+    "fold": "-",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    58,
+    93
+   ],
+   "text_prefix_16b": "> [!note]- Folde"
+  },
+  {
+   "info": {
+    "fold": "+",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    95,
+    128
+   ],
+   "text_prefix_16b": "> [!note]+ Open "
+  },
+  {
+   "info": {
+    "fold": "-",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    130,
+    159
+   ],
+   "text_prefix_16b": "> [!note]-\n> fol"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    161,
+    214
+   ],
+   "text_prefix_16b": "> [!note] - spac"
+  },
+  {
+   "info": {
+    "fold": "-",
+    "type": "note"
+   },
+   "kind": "callout",
+   "span": [
+    216,
+    252
+   ],
+   "text_prefix_16b": "> [!note]-Title-"
+  },
+  {
+   "info": {
+    "fold": "+",
+    "type": "info"
+   },
+   "kind": "callout",
+   "span": [
+    254,
+    304
+   ],
+   "text_prefix_16b": ">[!info]+ no spa"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "tip"
+   },
+   "kind": "callout",
+   "span": [
+    306,
+    421
+   ],
+   "text_prefix_16b": "> [!tip] Title w"
+  },
+  {
+   "info": {
+    "heading": "Frag",
+    "target": "wikilink"
+   },
+   "kind": "wikilink",
+   "span": [
+    326,
+    343
+   ],
+   "text_prefix_16b": "[[wikilink#Frag]"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    348,
+    361
+   ],
+   "text_prefix_16b": "`inline code` an"
+  },
+  {
+   "info": {
+    "target": "embed-in-title"
+   },
+   "kind": "embed",
+   "span": [
+    366,
+    385
+   ],
+   "text_prefix_16b": "![[embed-in-titl"
+  },
+  {
+   "info": {
+    "target": "other"
+   },
+   "kind": "wikilink",
+   "span": [
+    408,
+    417
+   ],
+   "text_prefix_16b": "[[other]] too\n\n>"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "warn"
+   },
+   "kind": "callout",
+   "span": [
+    423,
+    481
+   ],
+   "text_prefix_16b": "> [!warn] Title "
+  },
+  {
+   "info": {
+    "id": "title-anchor"
+   },
+   "kind": "anchor",
+   "span": [
+    468,
+    481
+   ],
+   "text_prefix_16b": "^title-anchor\n\n>"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "empty"
+   },
+   "kind": "callout",
+   "span": [
+    483,
+    493
+   ],
+   "text_prefix_16b": "> [!empty]\n\n> [!"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "multi"
+   },
+   "kind": "callout",
+   "span": [
+    495,
+    594
+   ],
+   "text_prefix_16b": "> [!multi] Title"
+  },
+  {
+   "info": {
+    "checked": false,
+    "depth": 1
+   },
+   "kind": "task",
+   "span": [
+    514,
+    561
+   ],
+   "text_prefix_16b": "- [ ] task insid"
+  },
+  {
+   "info": {
+    "id": "task-in-callout"
+   },
+   "kind": "anchor",
+   "span": [
+    545,
+    561
+   ],
+   "text_prefix_16b": "^task-in-callout"
+  },
+  {
+   "info": {
+    "checked": true,
+    "depth": 1
+   },
+   "kind": "task",
+   "span": [
+    564,
+    594
+   ],
+   "text_prefix_16b": "- [x] done task "
+  }
+ ],
+ "schema": "gt-v2"
+}

@@ -1,0 +1,216 @@
+{
+ "file": "corpus/embeds-learnings.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "tags",
+     "created",
+     "lint-ignore"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    101
+   ],
+   "text_prefix_16b": "---\ntags: [domai"
+  },
+  {
+   "hpath": "Embeds (Transclusion)",
+   "kind": "heading",
+   "span": [
+    103,
+    126
+   ],
+   "text_prefix_16b": "# Embeds (Transc"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    153,
+    156
+   ],
+   "text_prefix_16b": "`!` to render th"
+  },
+  {
+   "hpath": "Embeds (Transclusion)/Syntax",
+   "kind": "heading",
+   "span": [
+    253,
+    262
+   ],
+   "text_prefix_16b": "## Syntax\n\n```md"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    264,
+    794
+   ],
+   "text_prefix_16b": "```md\n![[note]] "
+  },
+  {
+   "hpath": "Embeds (Transclusion)/Image Storage",
+   "kind": "heading",
+   "span": [
+    796,
+    812
+   ],
+   "text_prefix_16b": "## Image Storage"
+  },
+  {
+   "kind": "table",
+   "span": [
+    897,
+    1181
+   ],
+   "text_prefix_16b": "| Option | Path "
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    960,
+    963
+   ],
+   "text_prefix_16b": "`/` root | Small"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1010,
+    1014
+   ],
+   "text_prefix_16b": "`./` | Co-locate"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1057,
+    1066
+   ],
+   "text_prefix_16b": "`assets/` | ==Re"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1137,
+    1153
+   ],
+   "text_prefix_16b": "`./attachments/`"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "tip"
+   },
+   "kind": "callout",
+   "span": [
+    1183,
+    1333
+   ],
+   "text_prefix_16b": "> [!tip] Convent"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1226,
+    1235
+   ],
+   "text_prefix_16b": "`assets/` at the"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1267,
+    1286
+   ],
+   "text_prefix_16b": "`![[filename.png"
+  },
+  {
+   "hpath": "Embeds (Transclusion)/Block References",
+   "kind": "heading",
+   "span": [
+    1335,
+    1354
+   ],
+   "text_prefix_16b": "## Block Referen"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1396,
+    1407
+   ],
+   "text_prefix_16b": "`^block-id` afte"
+  },
+  {
+   "info": {
+    "info_string": "md"
+   },
+   "kind": "fence",
+   "span": [
+    1419,
+    1473
+   ],
+   "text_prefix_16b": "```md\nThis is an"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1503,
+    1526
+   ],
+   "text_prefix_16b": "`[[note#^key-ins"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1544,
+    1568
+   ],
+   "text_prefix_16b": "`![[note#^key-in"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1619,
+    1629
+   ],
+   "text_prefix_16b": "`[[note#^` and s"
+  },
+  {
+   "hpath": "Embeds (Transclusion)/Single Source of Truth",
+   "kind": "heading",
+   "span": [
+    1703,
+    1728
+   ],
+   "text_prefix_16b": "## Single Source"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "warning"
+   },
+   "kind": "callout",
+   "span": [
+    1936,
+    2104
+   ],
+   "text_prefix_16b": "> [!warning] Por"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    1963,
+    1973
+   ],
+   "text_prefix_16b": "`![[...]]` is Ob"
+  }
+ ],
+ "schema": "gt-v2"
+}

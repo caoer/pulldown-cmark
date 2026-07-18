@@ -1,0 +1,177 @@
+{
+ "file": "adversarial/embeds-contexts.md",
+ "nodes": [
+  {
+   "info": {
+    "keys": [
+     "embed"
+    ]
+   },
+   "kind": "frontmatter",
+   "span": [
+    0,
+    55
+   ],
+   "text_prefix_16b": "---\nembed: \"![[f"
+  },
+  {
+   "hpath": "Heading with ![[embed-in-heading]] inside",
+   "kind": "heading",
+   "span": [
+    57,
+    101
+   ],
+   "text_prefix_16b": "## Heading with "
+  },
+  {
+   "info": {
+    "target": "embed-in-heading"
+   },
+   "kind": "embed",
+   "span": [
+    73,
+    94
+   ],
+   "text_prefix_16b": "![[embed-in-head"
+  },
+  {
+   "info": {
+    "fold": "",
+    "type": "callout"
+   },
+   "kind": "callout",
+   "span": [
+    103,
+    188
+   ],
+   "text_prefix_16b": "> [!callout] tit"
+  },
+  {
+   "info": {
+    "target": "in-callout-title"
+   },
+   "kind": "embed",
+   "span": [
+    128,
+    149
+   ],
+   "text_prefix_16b": "![[in-callout-ti"
+  },
+  {
+   "info": {
+    "heading": "Frag",
+    "target": "in-callout-body"
+   },
+   "kind": "embed",
+   "span": [
+    163,
+    188
+   ],
+   "text_prefix_16b": "![[in-callout-bo"
+  },
+  {
+   "info": {
+    "target": "in-list-item"
+   },
+   "kind": "embed",
+   "span": [
+    207,
+    224
+   ],
+   "text_prefix_16b": "![[in-list-item]"
+  },
+  {
+   "info": {
+    "checked": false,
+    "depth": 1
+   },
+   "kind": "task",
+   "span": [
+    225,
+    264
+   ],
+   "text_prefix_16b": "- [ ] task with "
+  },
+  {
+   "info": {
+    "alias": "alias",
+    "target": "in-task-item"
+   },
+   "kind": "embed",
+   "span": [
+    241,
+    264
+   ],
+   "text_prefix_16b": "![[in-task-item|"
+  },
+  {
+   "info": {
+    "target": "in-plain-quote"
+   },
+   "kind": "embed",
+   "span": [
+    285,
+    304
+   ],
+   "text_prefix_16b": "![[in-plain-quot"
+  },
+  {
+   "kind": "table",
+   "span": [
+    306,
+    349
+   ],
+   "text_prefix_16b": "| col |\n|-----|\n"
+  },
+  {
+   "info": {
+    "target": "in-table-cell"
+   },
+   "kind": "embed",
+   "span": [
+    329,
+    347
+   ],
+   "text_prefix_16b": "![[in-table-cell"
+  },
+  {
+   "info": {
+    "info_string": ""
+   },
+   "kind": "fence",
+   "span": [
+    404,
+    436
+   ],
+   "text_prefix_16b": "```\n![[in-fence-"
+  },
+  {
+   "kind": "inline-code",
+   "span": [
+    450,
+    482
+   ],
+   "text_prefix_16b": "`![[in-inline-co"
+  },
+  {
+   "kind": "comment",
+   "span": [
+    496,
+    539
+   ],
+   "text_prefix_16b": "%% ![[in-comment"
+  },
+  {
+   "info": {
+    "target": "in-comment-still-a-node-question"
+   },
+   "kind": "embed",
+   "span": [
+    499,
+    536
+   ],
+   "text_prefix_16b": "![[in-comment-st"
+  }
+ ],
+ "schema": "gt-v2"
+}
