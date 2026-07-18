@@ -212,6 +212,7 @@ pub fn xml_to_events(xml: &str) -> anyhow::Result<Vec<Event<'_>>> {
                             dest_url,
                             title,
                             id,
+                            wikilink: None,
                         }
                     } else {
                         Tag::Image {
@@ -219,12 +220,16 @@ pub fn xml_to_events(xml: &str) -> anyhow::Result<Vec<Event<'_>>> {
                             dest_url,
                             title,
                             id,
+                            wikilink: None,
                         }
                     }));
                 }
                 b"block_quote" => {
                     block_container_stack.push((true, false));
-                    events.push(Event::Start(Tag::BlockQuote(None)))
+                    events.push(Event::Start(Tag::BlockQuote {
+                        kind: None,
+                        callout: None,
+                    }))
                 }
                 b"html_block" => {
                     events.push(Event::Start(Tag::HtmlBlock));
@@ -350,6 +355,7 @@ pub fn normalize(events: Vec<Event<'_>>) -> Vec<Event<'_>> {
                 dest_url: urldecode(&format!("mailto:{dest_url}")).into(),
                 title: title.clone(),
                 id: "".into(), // commonmark.js does not record this
+                wikilink: None,
             })),
             Event::Start(Tag::Link {
                 dest_url, title, ..
@@ -358,6 +364,7 @@ pub fn normalize(events: Vec<Event<'_>>) -> Vec<Event<'_>> {
                 dest_url: urldecode(&dest_url).into(),
                 title: title.clone(),
                 id: "".into(), // commonmark.js does not record this
+                wikilink: None,
             })),
             // commonmark.js does not record the link type.
             Event::Start(Tag::Image {
@@ -370,6 +377,7 @@ pub fn normalize(events: Vec<Event<'_>>) -> Vec<Event<'_>> {
                 dest_url: urldecode(&dest_url).into(),
                 title: title.clone(),
                 id: id.clone(),
+                wikilink: None,
             })),
             // commonmark.js does not distinguish between fenced code
             // blocks with a "" info string and indented code blocks.

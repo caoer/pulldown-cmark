@@ -159,6 +159,8 @@ where
                 TaskListMarker(false) => {
                     self.write("<input disabled=\"\" type=\"checkbox\"/>\n")?;
                 }
+                // Obsidian block anchors are addresses, not content: no HTML output.
+                BlockAnchor(_) => {}
             }
         }
         Ok(())
@@ -244,7 +246,7 @@ where
                     _ => self.write(">"),
                 }
             }
-            Tag::BlockQuote(kind) => {
+            Tag::BlockQuote { kind, .. } => {
                 let class_str = match kind {
                     None => "",
                     Some(kind) => match kind {
@@ -360,7 +362,7 @@ where
                 link_type: LinkType::Email,
                 dest_url,
                 title,
-                id: _,
+                ..
             } => {
                 self.write("<a href=\"mailto:")?;
                 escape_href(&mut self.writer, &dest_url)?;
@@ -374,7 +376,7 @@ where
                 link_type: _,
                 dest_url,
                 title,
-                id: _,
+                ..
             } => {
                 self.write("<a href=\"")?;
                 escape_href(&mut self.writer, &dest_url)?;
@@ -388,7 +390,7 @@ where
                 link_type: _,
                 dest_url,
                 title,
-                id: _,
+                ..
             } => {
                 self.write("<img src=\"")?;
                 escape_href(&mut self.writer, &dest_url)?;
@@ -553,6 +555,7 @@ where
                 }
                 TaskListMarker(true) => self.write("[x]")?,
                 TaskListMarker(false) => self.write("[ ]")?,
+                BlockAnchor(_) => {}
             }
         }
         Ok(())

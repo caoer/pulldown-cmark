@@ -23,6 +23,7 @@ fn main() {
             Event::InlineMath(s) => println!("Math: {:?}", s),
             Event::FootnoteReference(s) => println!("FootnoteReference: {:?}", s),
             Event::TaskListMarker(b) => println!("TaskListMarker: {:?}", b),
+            Event::BlockAnchor(s) => println!("BlockAnchor: {:?}", s),
             Event::SoftBreak => println!("SoftBreak"),
             Event::HardBreak => println!("HardBreak"),
             Event::Rule => println!("Rule"),

@@ -1005,7 +1005,10 @@ impl<'input> ParserInner<'input> {
 
             if let Some((has_pothole, body_node, wikiname)) = wikilink {
                 let link_ix = self.allocs.allocate_link(
-                    LinkType::WikiLink { has_pothole },
+                    LinkType::WikiLink {
+                        has_pothole,
+                        embed: false,
+                    },
                     wikiname.into(),
                     "".into(),
                     "".into(),
@@ -2416,6 +2419,7 @@ fn item_to_event<'a>(item: Item, text: &'a str, allocs: &mut Allocations<'a>) ->
                 dest_url,
                 title,
                 id,
+                wikilink: None,
             }
         }
         ItemBody::Image(link_ix) => {
@@ -2425,6 +2429,7 @@ fn item_to_event<'a>(item: Item, text: &'a str, allocs: &mut Allocations<'a>) ->
                 dest_url,
                 title,
                 id,
+                wikilink: None,
             }
         }
         ItemBody::Heading(level, Some(heading_ix)) => {
@@ -2447,7 +2452,10 @@ fn item_to_event<'a>(item: Item, text: &'a str, allocs: &mut Allocations<'a>) ->
         }
         ItemBody::IndentCodeBlock => Tag::CodeBlock(CodeBlockKind::Indented),
         ItemBody::Container(_, kind, cow_ix) => Tag::ContainerBlock(kind, allocs.take_cow(cow_ix)),
-        ItemBody::BlockQuote(kind) => Tag::BlockQuote(kind),
+        ItemBody::BlockQuote(kind) => Tag::BlockQuote {
+            kind,
+            callout: None,
+        },
         ItemBody::List(_, c, listitem_start) => {
             if c == b'.' || c == b')' {
                 Tag::List(Some(listitem_start))
@@ -2832,6 +2840,7 @@ mod test {
                     dest_url,
                     title,
                     id,
+                    ..
                 } => Some((link_type, dest_url, title, id)),
                 _ => None,
             },
@@ -2944,7 +2953,10 @@ text
         let input = "> <foo\n> bar>";
         let events: Vec<_> = Parser::new(input).collect();
         let expected = [
-            Event::Start(Tag::BlockQuote(None)),
+            Event::Start(Tag::BlockQuote {
+                kind: None,
+                callout: None,
+            }),
             Event::Start(Tag::Paragraph),
             Event::InlineHtml(CowStr::Boxed("<foo\nbar>".to_string().into())),
             Event::End(TagEnd::Paragraph),
@@ -2960,19 +2972,27 @@ text
         let expected = [
             Event::Start(Tag::Paragraph),
             Event::Start(Tag::Link {
-                link_type: LinkType::WikiLink { has_pothole: false },
+                link_type: LinkType::WikiLink {
+                    has_pothole: false,
+                    embed: false,
+                },
                 dest_url: CowStr::Borrowed("foo"),
                 title: CowStr::Borrowed(""),
                 id: CowStr::Borrowed(""),
+                wikilink: None,
             }),
             Event::Text(CowStr::Borrowed("foo")),
             Event::End(TagEnd::Link),
             Event::Text(CowStr::Borrowed(" ")),
             Event::Start(Tag::Link {
-                link_type: LinkType::WikiLink { has_pothole: true },
+                link_type: LinkType::WikiLink {
+                    has_pothole: true,
+                    embed: false,
+                },
                 dest_url: CowStr::Borrowed("bar"),
                 title: CowStr::Borrowed(""),
                 id: CowStr::Borrowed(""),
+                wikilink: None,
             }),
             Event::Text(CowStr::Borrowed("baz")),
             Event::End(TagEnd::Link),

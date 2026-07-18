@@ -70,7 +70,7 @@ fn main() {
                 Tag::Strong => println!("Strong (this is a span tag)"),
                 Tag::Strikethrough => println!("Strikethrough (this is a span tag)"),
                 Tag::Highlight => println!("Highlight (this is a span tag)"),
-                Tag::BlockQuote(kind) => println!("BlockQuote ({:?})", kind),
+                Tag::BlockQuote { kind, callout } => println!("BlockQuote ({:?}) callout: {:?}", kind, callout),
                 Tag::CodeBlock(code_block_kind) => {
                     println!("CodeBlock code_block_kind: {:?}", code_block_kind)
                 }
@@ -82,6 +82,7 @@ fn main() {
                     dest_url,
                     title,
                     id,
+                    ..
                 } => println!(
                     "Link link_type: {:?} url: {} title: {} id: {}",
                     link_type, dest_url, title, id
@@ -91,6 +92,7 @@ fn main() {
                     dest_url,
                     title,
                     id,
+                    ..
                 } => println!(
                     "Image link_type: {:?} url: {} title: {} id: {}",
                     link_type, dest_url, title, id

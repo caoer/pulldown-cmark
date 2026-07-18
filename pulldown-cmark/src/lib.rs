@@ -159,6 +159,42 @@ pub enum BlockQuoteKind {
     Caution,
 }
 
+/// Fold marker on an Obsidian callout header.
+///
+/// Only parsed & populated with [`Options::ENABLE_OBSIDIAN_CALLOUTS`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub enum CalloutFold {
+    /// `> [!type]+` — foldable, rendered expanded by default.
+    Open,
+    /// `> [!type]-` — foldable, rendered collapsed by default.
+    Folded,
+}
+
+/// An Obsidian callout header on a blockquote: `> [!type]`, with an optional
+/// fold marker (`> [!type]+` / `> [!type]-`).
+///
+/// Unlike GFM alerts ([`BlockQuoteKind`]), the callout type is arbitrary.
+/// Only parsed & populated with [`Options::ENABLE_OBSIDIAN_CALLOUTS`].
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct Callout<'a> {
+    /// The callout type as written, e.g. `note` in `> [!note]`.
+    #[cfg_attr(feature = "serde", serde(borrow))]
+    pub kind: CowStr<'a>,
+    /// The fold marker following the type, if any.
+    pub fold: Option<CalloutFold>,
+}
+
+impl<'a> Callout<'a> {
+    pub fn into_static(self) -> Callout<'static> {
+        Callout {
+            kind: self.kind.into_static(),
+            fold: self.fold,
+        }
+    }
+}
+
 /// ContainerBlock kind (Spoiler only).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -198,7 +234,9 @@ pub enum Tag<'a> {
 
     /// A block quote.
     ///
-    /// The `BlockQuoteKind` is only parsed & populated with [`Options::ENABLE_GFM`], `None` otherwise.
+    /// The `kind` is only parsed & populated with [`Options::ENABLE_GFM`], `None` otherwise.
+    /// The `callout` is only parsed & populated with [`Options::ENABLE_OBSIDIAN_CALLOUTS`],
+    /// `None` otherwise.
     ///
     /// ```markdown
     /// > regular quote
@@ -206,7 +244,13 @@ pub enum Tag<'a> {
     /// > [!NOTE]
     /// > note quote
     /// ```
-    BlockQuote(Option<BlockQuoteKind>),
+    BlockQuote {
+        /// GFM alert kind (fixed set: Note, Tip, Important, Warning, Caution).
+        kind: Option<BlockQuoteKind>,
+        /// Obsidian callout header (arbitrary type + optional fold marker).
+    #[cfg_attr(feature = "serde", serde(borrow))]
+        callout: Option<Callout<'a>>,
+    },
     /// A code block.
     CodeBlock(CodeBlockKind<'a>),
     ContainerBlock(ContainerKind, CowStr<'a>),
@@ -303,6 +347,11 @@ pub enum Tag<'a> {
         title: CowStr<'a>,
         /// Identifier of reference links, e.g. `world` in the link `[hello][world]`.
         id: CowStr<'a>,
+        /// Structured Obsidian wikilink target. Only parsed & populated when
+        /// `link_type` is [`LinkType::WikiLink`] and
+        /// [`Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS`] is enabled, `None` otherwise.
+    #[cfg_attr(feature = "serde", serde(borrow))]
+        wikilink: Option<WikiLinkTarget<'a>>,
     },
 
     /// An image. The first field is the link type, the second the destination URL and the third is a title,
@@ -313,6 +362,11 @@ pub enum Tag<'a> {
         title: CowStr<'a>,
         /// Identifier of reference links, e.g. `world` in the link `[hello][world]`.
         id: CowStr<'a>,
+        /// Structured Obsidian wikilink target. Only parsed & populated when
+        /// `link_type` is [`LinkType::WikiLink`] and
+        /// [`Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS`] is enabled, `None` otherwise.
+    #[cfg_attr(feature = "serde", serde(borrow))]
+        wikilink: Option<WikiLinkTarget<'a>>,
     },
 
     /// A metadata block.
@@ -326,7 +380,7 @@ impl<'a> Tag<'a> {
         match self {
             Tag::Paragraph => TagEnd::Paragraph,
             Tag::Heading { level, .. } => TagEnd::Heading(*level),
-            Tag::BlockQuote(kind) => TagEnd::BlockQuote(*kind),
+            Tag::BlockQuote { kind, .. } => TagEnd::BlockQuote(*kind),
             Tag::CodeBlock(_) => TagEnd::CodeBlock,
             Tag::ContainerBlock(kind, _) => TagEnd::ContainerBlock(*kind),
             Tag::HtmlBlock => TagEnd::HtmlBlock,
@@ -369,7 +423,10 @@ impl<'a> Tag<'a> {
                     .map(|(k, v)| (k.into_static(), v.map(|s| s.into_static())))
                     .collect(),
             },
-            Tag::BlockQuote(k) => Tag::BlockQuote(k),
+            Tag::BlockQuote { kind, callout } => Tag::BlockQuote {
+                kind,
+                callout: callout.map(|c| c.into_static()),
+            },
             Tag::CodeBlock(kb) => Tag::CodeBlock(kb.into_static()),
             Tag::ContainerBlock(k, s) => Tag::ContainerBlock(k, s.into_static()),
             Tag::HtmlBlock => Tag::HtmlBlock,
@@ -391,22 +448,26 @@ impl<'a> Tag<'a> {
                 dest_url,
                 title,
                 id,
+                wikilink,
             } => Tag::Link {
                 link_type,
                 dest_url: dest_url.into_static(),
                 title: title.into_static(),
                 id: id.into_static(),
+                wikilink: wikilink.map(|w| w.into_static()),
             },
             Tag::Image {
                 link_type,
                 dest_url,
                 title,
                 id,
+                wikilink,
             } => Tag::Image {
                 link_type,
                 dest_url: dest_url.into_static(),
                 title: title.into_static(),
                 id: id.into_static(),
+                wikilink: wikilink.map(|w| w.into_static()),
             },
             Tag::MetadataBlock(v) => Tag::MetadataBlock(v),
             Tag::DefinitionList => Tag::DefinitionList,
@@ -541,7 +602,61 @@ pub enum LinkType {
         /// * `true` - `[[foo|bar]]`
         /// * `false` - `[[foo]]`
         has_pothole: bool,
+        /// `true` if the wikilink is an Obsidian embed (`![[foo]]`).
+        ///
+        /// Only set with [`Options::ENABLE_OBSIDIAN_EMBEDS`]; without it,
+        /// `![[foo]]` parses as an [`Tag::Image`] with `embed: false` as before.
+        embed: bool,
     },
+}
+
+/// The fragment part of an Obsidian wikilink target.
+///
+/// Only parsed & populated with [`Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS`].
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub enum WikiLinkFragment<'a> {
+    /// `[[target#Heading]]` — the heading sub-path after the first `#`, verbatim.
+    /// Nested sub-paths like `[[target#H1#H2]]` stay one string (`H1#H2`).
+    #[cfg_attr(feature = "serde", serde(borrow))]
+    Heading(CowStr<'a>),
+    /// `[[target#^block]]` — the block anchor id after `#^`.
+    #[cfg_attr(feature = "serde", serde(borrow))]
+    BlockAnchor(CowStr<'a>),
+}
+
+impl<'a> WikiLinkFragment<'a> {
+    pub fn into_static(self) -> WikiLinkFragment<'static> {
+        match self {
+            WikiLinkFragment::Heading(s) => WikiLinkFragment::Heading(s.into_static()),
+            WikiLinkFragment::BlockAnchor(s) => WikiLinkFragment::BlockAnchor(s.into_static()),
+        }
+    }
+}
+
+/// A structurally split Obsidian wikilink target: `[[target]]`,
+/// `[[target#Heading]]`, `[[target#^block]]`.
+///
+/// Only parsed & populated with [`Options::ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS`].
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct WikiLinkTarget<'a> {
+    /// The note/file part before the first `#`. Empty for same-file references
+    /// (`[[#Heading]]`).
+    #[cfg_attr(feature = "serde", serde(borrow))]
+    pub target: CowStr<'a>,
+    /// The fragment after the first `#`, if any.
+    #[cfg_attr(feature = "serde", serde(borrow))]
+    pub fragment: Option<WikiLinkFragment<'a>>,
+}
+
+impl<'a> WikiLinkTarget<'a> {
+    pub fn into_static(self) -> WikiLinkTarget<'static> {
+        WikiLinkTarget {
+            target: self.target.into_static(),
+            fragment: self.fragment.map(|f| f.into_static()),
+        }
+    }
 }
 
 impl LinkType {
@@ -649,6 +764,15 @@ pub enum Event<'a> {
     /// - [x] checked
     /// ```
     TaskListMarker(bool),
+    /// An Obsidian block anchor at the tail of a line. Contains the anchor id
+    /// without the leading `^`; the source span reported by
+    /// [`OffsetIter`](crate::OffsetIter) covers exactly `^id` (caret included).
+    /// Only parsed and emitted with [`Options::ENABLE_OBSIDIAN_BLOCK_ANCHORS`].
+    /// ```markdown
+    /// Some paragraph text. ^block-id
+    /// ```
+    #[cfg_attr(feature = "serde", serde(borrow))]
+    BlockAnchor(CowStr<'a>),
 }
 
 impl<'a> Event<'a> {
@@ -667,6 +791,7 @@ impl<'a> Event<'a> {
             Event::HardBreak => Event::HardBreak,
             Event::Rule => Event::Rule,
             Event::TaskListMarker(b) => Event::TaskListMarker(b),
+            Event::BlockAnchor(s) => Event::BlockAnchor(s.into_static()),
         }
     }
 }
@@ -781,6 +906,31 @@ bitflags::bitflags! {
         /// `<mark>highlight</mark>`. Originates from markdown-it / pandoc; not part
         /// of CommonMark or GFM.
         const ENABLE_HIGHLIGHT = 1 << 17;
+        /// Obsidian-style block anchors: `^id` at the tail of a line, emitted as
+        /// [`Event::BlockAnchor`]. Does not fire inside code blocks or code spans.
+        ///
+        /// ```markdown
+        /// Some paragraph text. ^block-id
+        /// ```
+        const ENABLE_OBSIDIAN_BLOCK_ANCHORS = 1 << 18;
+        /// Obsidian-style callouts: `> [!type]` blockquote headers with arbitrary
+        /// types and optional fold markers (`+`/`-`), populated in the `callout`
+        /// field of [`Tag::BlockQuote`].
+        ///
+        /// ```markdown
+        /// > [!my-callout]- folded callout
+        /// > body
+        /// ```
+        const ENABLE_OBSIDIAN_CALLOUTS = 1 << 19;
+        /// Obsidian-style embeds: `![[target]]` folds into the wikilink event as
+        /// [`LinkType::WikiLink`] with `embed: true` (instead of parsing as an
+        /// image). Requires [`Options::ENABLE_WIKILINKS`].
+        const ENABLE_OBSIDIAN_EMBEDS = 1 << 20;
+        /// Obsidian-style wikilink fragment semantics: `[[target#Heading]]` and
+        /// `[[target#^block]]` targets are split into structured fields, populated
+        /// in the `wikilink` field of [`Tag::Link`] / [`Tag::Image`] as
+        /// [`WikiLinkTarget`]. Requires [`Options::ENABLE_WIKILINKS`].
+        const ENABLE_OBSIDIAN_WIKILINK_FRAGMENTS = 1 << 21;
     }
 }
 
