@@ -240,13 +240,17 @@ impl<'a, 'b> FirstPass<'a, 'b> {
                         let ty = &self.text[start_ix + scan.type_start..start_ix + scan.type_end];
                         if self.options.contains(Options::ENABLE_GFM)
                             && scan.fold.is_none()
+                            && scan.meta.is_none()
                             && scan.consumed_to_eol
-                            && !scan.leading_ws
                         {
                             kind = blockquote_kind_from_tag(ty.as_bytes());
                         }
+                        let metadata = scan
+                            .meta
+                            .map(|(s, e)| self.text[start_ix + s..start_ix + e].into());
                         callout = Some(self.allocs.allocate_callout(Callout {
                             kind: ty.into(),
+                            metadata,
                             fold: scan.fold,
                         }));
                         tag_at_eol = scan.consumed_to_eol;
